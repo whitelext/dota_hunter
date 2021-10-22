@@ -1,4 +1,4 @@
-package com.whitelext.dota_hunter.ui.theme
+package com.whitelext.dotaHunter.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
