@@ -24,22 +24,16 @@ jobs:
   static_analysis:
     runs-on: ubuntu-latest
     steps:
-      - name: 🐕 Install reviewdog
-        run: sudo su -c 'wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s -- -b /usr/local/bin/ v0.10.2'
       - uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        name: ♻ Cache
+      - name: Set up JDK 1.11
+        uses: actions/setup-java@v2
         with:
-          path: build/bin
-          key: ${{ runner.os }}
+          distribution: 'temurin'
+          java-version: '11'
       - name: 💙 Ktlint
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./ktlint
+        run: ./gradlew ktlintCheck
       - name: 💜 Detekt
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./detekt
+        run: ./gradlew detekt
   check_aseemble:
     runs-on: ubuntu-latest
     steps:
