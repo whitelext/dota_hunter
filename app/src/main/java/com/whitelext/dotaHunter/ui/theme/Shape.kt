@@ -4,11 +4,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes
 import androidx.compose.ui.unit.dp
 
-const val mediumShapeSize = 4
-const val largeShapeSize = 0
+const val MEDIUM_SHAPE_SIZE = 4
+const val LARGE_SHAPE_SEIZE = 0
 
 val Shapes = Shapes(
-    small = RoundedCornerShape(mediumShapeSize.dp),
-    medium = RoundedCornerShape(mediumShapeSize.dp),
-    large = RoundedCornerShape(largeShapeSize.dp)
+    small = RoundedCornerShape(MEDIUM_SHAPE_SIZE.dp),
+    medium = RoundedCornerShape(MEDIUM_SHAPE_SIZE.dp),
+    large = RoundedCornerShape(LARGE_SHAPE_SEIZE.dp)
 )
