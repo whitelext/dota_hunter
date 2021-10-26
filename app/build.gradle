@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'com.apollographql.apollo'
 }
 
 android {
@@ -47,6 +48,11 @@ android {
     }
 }
 
+apollo {
+    // instruct the compiler to generate Kotlin models
+    generateKotlinModels.set(true)
+}
+
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.6.0'
@@ -62,4 +68,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+
+    //apollo
+    implementation "com.apollographql.apollo:apollo-runtime:2.5.9"
+    // Coroutines extensions for easier asynchronicity handling
+    implementation "com.apollographql.apollo:apollo-coroutines-support:2.5.9"
 }
