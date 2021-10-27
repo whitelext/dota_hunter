@@ -1,0 +1,17 @@
+query UserList {
+    stratz {
+        search(request: {
+            query : "Dickbearoff"
+            searchType : [PLAYERS]
+            take : 100
+        }) {
+            players {
+                id
+                avatar
+                name
+                seasonRank
+                lastMatchDateTime
+            }
+        }
+    }
+}
