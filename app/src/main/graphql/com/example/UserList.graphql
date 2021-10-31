@@ -1,7 +1,7 @@
-query UserList {
+query UserList($username: String!) {
     stratz {
         search(request: {
-            query : "Dickbearoff"
+            query : $username
             searchType : [PLAYERS]
             take : 100
         }) {
