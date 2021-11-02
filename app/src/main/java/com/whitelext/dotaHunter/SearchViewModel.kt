@@ -1,8 +1,7 @@
 package com.whitelext.dotaHunter
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.UserListQuery
 import com.whitelext.dotaHunter.common.Resource
@@ -12,10 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(
-    private val searchRepository: SearchRepository,
-    application: Application
-) : AndroidViewModel(application) {
+class SearchViewModel @Inject constructor(private val searchRepository: SearchRepository) : ViewModel() {
 
     private var searchQuery = ""
     val usersLiveData by lazy { MutableLiveData<List<UserListQuery.Player>>() }
@@ -24,6 +20,11 @@ class SearchViewModel @Inject constructor(
     fun onQueryChanged(newQuery: String) {
         if (searchQuery != newQuery) {
             searchQuery = newQuery
+            if (searchQuery.isEmpty()) {
+                // TODO: put favourites users in usersLiveData
+                usersLiveData.value = emptyList()
+                return
+            }
             Utils.debounceCall(
                 coroutineScope = viewModelScope,
                 destinationFunction = ::performSearchUsers
