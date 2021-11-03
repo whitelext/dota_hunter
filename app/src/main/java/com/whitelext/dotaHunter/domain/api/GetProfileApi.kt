@@ -12,27 +12,23 @@ import javax.inject.Inject
 
 class GetProfileApi @Inject constructor(private val apolloClient: ApolloClient) {
 
-    suspend fun getProfile(steamAccountIdQuery: Long): Resource.Success<UserProfileQuery.Player> {
+    suspend fun getProfile(steamAccountIdQuery: Long): Resource<UserProfileQuery.Player> {
 
         val response = try {
-            throw ApolloException("null")
-            /*apolloClient.query(UserProfileQuery(steamAccountIdQuery)).responseFetcher(
-                ApolloResponseFetchers.NETWORK_FIRST
-            ).await()*/
+            apolloClient.query(UserProfileQuery(steamAccountIdQuery)).await()
         } catch (e: ApolloException) {
-            apolloClient.apolloStore.read(UserProfileQuery(steamAccountIdQuery)).execute()
+            null
         }
 
-        println(response)
-
-        /*val player = response.data?.player
+        val player = response?.data?.player
 
         return if (player != null && !response.hasErrors()) {
             Resource.Success(player)
         } else {
-            Resource.Error(response?.errors?.let { SearchApiError(it.first()) } ?: ResourceError())
-        }*/
-        return Resource.Success(response.player!!)
-
+            Resource.Error(response?.errors?.let {
+                ResourceError.API_ERROR.apply {
+                    message = it.first().message
+                }} ?: ResourceError.UNKNOWN)
+        }
     }
 }

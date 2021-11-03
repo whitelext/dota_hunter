@@ -22,7 +22,11 @@ class SearchApi @Inject constructor(private val apolloClient: ApolloClient) {
         return if (users != null && !response.hasErrors()) {
             Resource.Success(users)
         } else {
-            Resource.Error(response?.errors?.let { SearchApiError(it.first()) } ?: ResourceError())
+            Resource.Error(response?.errors?.let {
+                ResourceError.API_ERROR.apply {
+                    message = it.first().message
+                }
+            } ?: ResourceError.UNKNOWN)
         }
 
     }

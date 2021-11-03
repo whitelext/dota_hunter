@@ -1,4 +1,4 @@
-query UserList($username: String!) {
+query UserList($username: String! = "whitelext") {
     stratz {
         search(request: {
             query : $username

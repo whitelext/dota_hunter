@@ -9,6 +9,7 @@ import com.apollographql.apollo.cache.normalized.CacheKeyResolver
 import com.apollographql.apollo.cache.normalized.lru.EvictionPolicy
 import com.apollographql.apollo.cache.normalized.lru.LruNormalizedCacheFactory
 import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory
+import com.apollographql.apollo.fetcher.ApolloResponseFetchers
 import com.whitelext.dotaHunter.domain.repository.ProfileRepository
 import com.whitelext.dotaHunter.domain.repository.ProfileRepositoryImpl
 import com.whitelext.dotaHunter.domain.repository.SearchRepository
@@ -41,37 +42,18 @@ object MainModule {
     }
 
     @Provides
-    fun provideSqlNormalizedCache(@ApplicationContext context : Context) : SqlNormalizedCacheFactory {
+    fun provideSqlNormalizedCache(@ApplicationContext context: Context): SqlNormalizedCacheFactory {
         return SqlNormalizedCacheFactory(context, "apollo.db")
     }
 
     @Provides
-    fun providePlayerKeyResolver(): CacheKeyResolver {
-        return object : CacheKeyResolver() {
-            override fun fromFieldRecordSet(
-                field: ResponseField,
-                recordSet: Map<String, Any>
-            ): CacheKey {
-                return CacheKey.from(recordSet["steamAccountId"] as String)
-            }
-
-            override fun fromFieldArguments(
-                field: ResponseField,
-                variables: Operation.Variables
-            ): CacheKey {
-                return CacheKey.from(field.resolveArgument("steamAccountId", variables) as String)
-            }
-        }
-    }
-
-    @Provides
     fun provideApolloClient(
-        sqlNormalizedCache: SqlNormalizedCacheFactory,
-        playerKeyResolver: CacheKeyResolver
+        sqlNormalizedCache: SqlNormalizedCacheFactory
     ): ApolloClient {
         return ApolloClient
             .builder()
-            .normalizedCache(sqlNormalizedCache, playerKeyResolver)
+            .normalizedCache(sqlNormalizedCache)
+            .defaultResponseFetcher(ApolloResponseFetchers.CACHE_AND_NETWORK)
             .serverUrl("https://api.stratz.com/graphql")
             .build()
     }

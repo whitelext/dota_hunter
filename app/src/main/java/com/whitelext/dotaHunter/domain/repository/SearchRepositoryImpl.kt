@@ -7,7 +7,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SearchRepositoryImpl @Inject constructor(private val apiService: SearchApi) : SearchRepository {
+class SearchRepositoryImpl @Inject constructor(private val apiService: SearchApi) :
+    SearchRepository {
 
     override suspend fun searchUsers(query: String): Resource<List<UserListQuery.Player>> {
         return apiService.getUsers(query)

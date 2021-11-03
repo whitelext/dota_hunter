@@ -1,8 +1,9 @@
-query UserProfile($steamAccountId: Long!) {
+query UserProfile($steamAccountId: Long! = 102459734) {
     player(steamAccountId: $steamAccountId) {
         matchCount
         winCount
         steamAccount {
+            id
             seasonRank
         }
         matches(
