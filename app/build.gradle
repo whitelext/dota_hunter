@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'com.apollographql.apollo'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -52,6 +54,9 @@ apollo {
     // instruct the compiler to generate Kotlin models
     generateKotlinModels.set(true)
 }
+kapt {
+    correctErrorTypes true
+}
 
 dependencies {
 
@@ -73,4 +78,8 @@ dependencies {
     implementation "com.apollographql.apollo:apollo-runtime:2.5.9"
     // Coroutines extensions for easier asynchronicity handling
     implementation "com.apollographql.apollo:apollo-coroutines-support:2.5.9"
+
+    // hilt
+    implementation 'com.google.dagger:hilt-android:2.40'
+    kapt 'com.google.dagger:hilt-compiler:2.40'
 }
