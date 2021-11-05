@@ -10,10 +10,7 @@ import com.apollographql.apollo.cache.normalized.lru.EvictionPolicy
 import com.apollographql.apollo.cache.normalized.lru.LruNormalizedCacheFactory
 import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.apollographql.apollo.fetcher.ApolloResponseFetchers
-import com.whitelext.dotaHunter.domain.repository.ProfileRepository
-import com.whitelext.dotaHunter.domain.repository.ProfileRepositoryImpl
-import com.whitelext.dotaHunter.domain.repository.SearchRepository
-import com.whitelext.dotaHunter.domain.repository.SearchRepositoryImpl
+import com.whitelext.dotaHunter.domain.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,13 +22,18 @@ import dagger.hilt.components.SingletonComponent
 object MainModule {
 
     @Provides
-    fun provideSearchRepository(repositoryImp: SearchRepositoryImpl): SearchRepository {
-        return repositoryImp
+    fun provideSearchRepository(repositoryImpl: SearchRepositoryImpl): SearchRepository {
+        return repositoryImpl
     }
 
     @Provides
-    fun provideProfileRepository(repositoryImp: ProfileRepositoryImpl): ProfileRepository {
-        return repositoryImp
+    fun provideProfileRepository(repositoryImpl: ProfileRepositoryImpl): ProfileRepository {
+        return repositoryImpl
+    }
+
+    @Provides
+    fun provideItemsRepository(repositoryImpl: ItemsRepositoryImpl): ItemsRepository {
+        return repositoryImpl
     }
 
     @Provides
