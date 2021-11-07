@@ -1,0 +1,33 @@
+query UserProfile($steamAccountId: Long! = 102459734) {
+    player(steamAccountId: $steamAccountId) {
+        matchCount
+        winCount
+        steamAccount {
+            id
+            seasonRank
+        }
+        matches(
+            request: {
+                playerList: SINGLE}){
+            id
+            rank
+            players(steamAccountId: $steamAccountId){
+                matchId
+                isVictory
+                hero{
+                    id
+                    name
+                }
+                kills
+                deaths
+                assists
+                item0Id
+                item1Id
+                item2Id
+                item3Id
+                item4Id
+                item5Id
+            }
+        }
+    }
+}

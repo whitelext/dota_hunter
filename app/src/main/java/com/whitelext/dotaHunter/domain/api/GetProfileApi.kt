@@ -3,24 +3,25 @@ package com.whitelext.dotaHunter.domain.api
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloException
-import com.example.UserListQuery
+import com.example.UserProfileQuery
 import com.whitelext.dotaHunter.common.Resource
 import com.whitelext.dotaHunter.common.ResourceError
 import javax.inject.Inject
 
-class SearchApi @Inject constructor(private val apolloClient: ApolloClient) {
+class GetProfileApi @Inject constructor(private val apolloClient: ApolloClient) {
 
-    suspend fun getUsers(userNameQuery: String): Resource<List<UserListQuery.Player>> {
+    suspend fun getProfile(steamAccountIdQuery: Long): Resource<UserProfileQuery.Player> {
+
         val response = try {
-            apolloClient.query(UserListQuery(userNameQuery)).await()
+            apolloClient.query(UserProfileQuery(steamAccountIdQuery)).await()
         } catch (e: ApolloException) {
             null
         }
 
-        val users = response?.data?.stratz?.search?.players?.filterNotNull()
+        val player = response?.data?.player
 
-        return if (users != null && !response.hasErrors()) {
-            Resource.Success(users)
+        return if (player != null && !response.hasErrors()) {
+            Resource.Success(player)
         } else {
             Resource.Error(response?.errors?.let {
                 ResourceError.API_ERROR.apply {
@@ -28,6 +29,5 @@ class SearchApi @Inject constructor(private val apolloClient: ApolloClient) {
                 }
             } ?: ResourceError.UNKNOWN)
         }
-
     }
 }

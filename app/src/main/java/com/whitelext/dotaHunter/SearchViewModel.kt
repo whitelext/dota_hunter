@@ -1,5 +1,6 @@
 package com.whitelext.dotaHunter
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,18 +12,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(private val searchRepository: SearchRepository) : ViewModel() {
+class SearchViewModel @Inject constructor(private val searchRepository: SearchRepository) :
+    ViewModel() {
 
     private var searchQuery = ""
-    val usersLiveData by lazy { MutableLiveData<List<UserListQuery.Player>>() }
-
+    private val _usersLiveData by lazy { MutableLiveData<List<UserListQuery.Player>>() }
+    val usersLiveData: LiveData<List<UserListQuery.Player>> = _usersLiveData
 
     fun onQueryChanged(newQuery: String) {
         if (searchQuery != newQuery) {
             searchQuery = newQuery
             if (searchQuery.isEmpty()) {
                 // TODO: put favourites users in usersLiveData
-                usersLiveData.value = emptyList()
+                _usersLiveData.value = emptyList()
                 return
             }
             Utils.debounceCall(
@@ -33,25 +35,18 @@ class SearchViewModel @Inject constructor(private val searchRepository: SearchRe
     }
 
     private suspend fun performSearchUsers() {
-            val response = searchRepository.searchUsers(searchQuery)
 
-            when (response) {
-                is Resource.Success -> {
-                    usersLiveData.value = response.data
-                }
-                is Resource.Error -> {
-                    // TODO: ui notification
-                }
-                else -> {
-                    // TODO: same ui notification
-                }
+        when (val response = searchRepository.searchUsers(searchQuery)) {
+            is Resource.Success -> {
+                _usersLiveData.value = response.data
             }
+            is Resource.Error -> {
+                // TODO: ui notification
+            }
+            else -> {
+                // TODO: same ui notification
+            }
+        }
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        // TODO: in the final make sure nothing needs to be cleaned up
-    }
-
 
 }

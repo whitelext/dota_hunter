@@ -1,0 +1,10 @@
+query ItemsList {
+    constants {
+        items {
+            id
+            name
+            image
+            shortName
+        }
+    }
+}

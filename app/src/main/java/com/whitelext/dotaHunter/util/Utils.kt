@@ -23,4 +23,21 @@ object Utils {
         }
     }
 
+    fun getAvatarUrl(suffix: String) = buildString {
+        append("https://cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/")
+        append(suffix)
+    }
+
+    fun getItemUrl(itemName: String) = buildString {
+        append("https://cdn.stratz.com/images/dota2/items/")
+        append("${itemName}.png")
+    }
+
+    fun getRankUrl(value: Int) = buildString {
+        append("https://cdn.stratz.com/images/dota2/seasonal_rank/medal_${value / 10}.png")
+    }
+
+    fun getStarsUrl(value: Int) = buildString {
+        append("https://cdn.stratz.com/images/dota2/seasonal_rank/star_${if (value / 10 == 8) 0 else value % 10}.png")
+    }
 }

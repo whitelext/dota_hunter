@@ -3,24 +3,25 @@ package com.whitelext.dotaHunter.domain.api
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloException
-import com.example.UserListQuery
+import com.example.ItemsListQuery
 import com.whitelext.dotaHunter.common.Resource
 import com.whitelext.dotaHunter.common.ResourceError
 import javax.inject.Inject
 
-class SearchApi @Inject constructor(private val apolloClient: ApolloClient) {
+class GetItemsApi @Inject constructor(private val apolloClient: ApolloClient) {
 
-    suspend fun getUsers(userNameQuery: String): Resource<List<UserListQuery.Player>> {
+    suspend fun getItems(): Resource<List<ItemsListQuery.Item>> {
+
         val response = try {
-            apolloClient.query(UserListQuery(userNameQuery)).await()
+            apolloClient.query(ItemsListQuery()).await()
         } catch (e: ApolloException) {
             null
         }
 
-        val users = response?.data?.stratz?.search?.players?.filterNotNull()
+        val constants = response?.data?.constants?.items?.filterNotNull()
 
-        return if (users != null && !response.hasErrors()) {
-            Resource.Success(users)
+        return if (constants != null && !response.hasErrors()) {
+            Resource.Success(constants)
         } else {
             Resource.Error(response?.errors?.let {
                 ResourceError.API_ERROR.apply {
@@ -28,6 +29,5 @@ class SearchApi @Inject constructor(private val apolloClient: ApolloClient) {
                 }
             } ?: ResourceError.UNKNOWN)
         }
-
     }
 }
