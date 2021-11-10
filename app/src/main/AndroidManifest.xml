@@ -14,7 +14,7 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.Dota_hunter">
         <activity
-                android:name="com.whitelext.dotaHunter.MainActivity"
+                android:name="com.whitelext.dotaHunter.view.MainActivity"
                 android:exported="true"
                 android:label="@string/app_name"
                 android:theme="@style/Theme.Dota_hunter.NoActionBar">
