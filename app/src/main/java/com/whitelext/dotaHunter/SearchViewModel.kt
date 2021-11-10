@@ -38,7 +38,10 @@ class SearchViewModel @Inject constructor(private val searchRepository: SearchRe
 
         when (val response = searchRepository.searchUsers(searchQuery)) {
             is Resource.Success -> {
-                _usersLiveData.value = response.data
+                _usersLiveData.value =
+                    response.data.filter { it.lastMatchDateTime != null }.sortedByDescending {
+                        it.seasonRank.toString().toLongOrNull()
+                    }
             }
             is Resource.Error -> {
                 // TODO: ui notification
@@ -48,5 +51,4 @@ class SearchViewModel @Inject constructor(private val searchRepository: SearchRe
             }
         }
     }
-
 }

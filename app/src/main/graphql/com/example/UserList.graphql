@@ -3,7 +3,7 @@ query UserList($username: String! = "whitelext") {
         search(request: {
             query : $username
             searchType : [PLAYERS]
-            take : 100
+            take : 400
         }) {
             players {
                 id
