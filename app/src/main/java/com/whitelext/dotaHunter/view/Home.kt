@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.whitelext.dotaHunter.ui.theme.BottomNavColor
 import com.whitelext.dotaHunter.util.Screen
 import kotlinx.coroutines.FlowPreview
 
@@ -76,7 +77,7 @@ fun BottomNavigationBar(
     val currentDestination = navBackStackEntry?.destination
 
     BottomNavigation(
-        backgroundColor = MaterialTheme.colors.surface,
+        backgroundColor = BottomNavColor,
         elevation = 8.dp,
         modifier = modifier
     ) {
