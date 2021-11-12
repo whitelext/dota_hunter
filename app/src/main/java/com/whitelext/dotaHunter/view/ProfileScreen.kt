@@ -2,6 +2,7 @@ package com.whitelext.dotaHunter.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -73,9 +74,7 @@ private fun UserCard(
             .fillMaxWidth()
     ) {
         Column {
-            Box {
-                ProfilePhoto(id = player?.steamAccount?.avatar)
-            }
+            ProfilePhoto(id = player?.steamAccount?.avatar)
         }
         Column(
             verticalArrangement = Arrangement.Center
@@ -183,7 +182,7 @@ private fun Match(match: UserProfileQuery.Match) {
 @Composable
 private fun ItemsGrid(items: List<Short>) {
 
-    Column (modifier = Modifier.padding(end = 7.dp)){
+    Column (modifier = Modifier.padding(end = 7.dp, top = 16.dp, bottom = 4.dp)){
         Row {
             for (i in 0..2) {
                 val itemName = ItemStore.getItemById(items[i].toInt())
@@ -212,14 +211,26 @@ private fun ItemIcon(itemUrl: String, itemName: String) {
         contentDescription = itemName,
         modifier = Modifier
             .padding(horizontal = 3.dp)
-            .size(65.dp)
-            .clip(shape = RoundedCornerShape(5.dp)),
+            .width(65.dp)
+            .height(55.dp)
+            .clip(RoundedCornerShape(40))
     )
 
 }
 
 @Composable fun EmptySpace() {
-    Spacer(modifier = Modifier
-        .padding(horizontal = 3.dp)
-        .size(70.dp))
+    Spacer(
+        modifier = Modifier
+            .padding(top = 4.dp)
+            .padding(horizontal = 3.dp)
+            .width(65.dp)
+            .height(48.dp)
+            .clip(RoundedCornerShape(30))
+            .border(
+                width = 1.dp,
+                color = BackgroundDark,
+                shape = RoundedCornerShape(30)
+            )
+    )
+
 }
