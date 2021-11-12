@@ -4,5 +4,6 @@ import com.whitelext.dotaHunter.R
 
 sealed class Screen(var route: String, var icon: Int, var title: String) {
     object Search : Screen("search", R.drawable.ic_search_24, "Search")
+    object Profile : Screen("profile", 0, "Profile")
     object Favorites : Screen("favorites", R.drawable.ic_favorites_24, "Favorites")
 }

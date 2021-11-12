@@ -1,21 +1,21 @@
 package com.whitelext.dotaHunter.util
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.example.UserProfileQuery
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 import kotlin.reflect.KSuspendFunction0
 
 object Utils {
 
-    fun debounceCall(
-        waitMs: Long = 300L,
+    var debounceJob: Job? = null
+
+    fun asyncCall(
+        waitMs: Long = 0L,
         coroutineScope: CoroutineScope,
         destinationFunction: KSuspendFunction0<Unit>
     ): () -> Unit {
-        var debounceJob: Job? = null
         return {
             debounceJob?.cancel()
             debounceJob = coroutineScope.launch {
@@ -28,6 +28,11 @@ object Utils {
     fun getAvatarUrl(suffix: String?) = buildString {
         append("https://cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/")
         append(suffix)
+    }
+
+    fun getHeroUrl(displayName: String?): String {
+        val preparedName = displayName?.replace(" ", "_")
+        return "https://www.dota2protracker.com/static/icons/${preparedName}_minimap_icon.png"
     }
 
     fun getItemUrl(itemName: String) = buildString {
@@ -57,5 +62,19 @@ object Utils {
         } else {
             "non active"
         }
+    }
+
+    fun getDuration(durationSeconds: Int): String {
+        val minutes = durationSeconds / 60
+        val seconds =  durationSeconds - minutes * 60
+        return "$minutes:${if (seconds < 10) "0$seconds" else seconds}"
+    }
+
+    fun getKillsAssistsDeaths(match: UserProfileQuery.Player1): String {
+        return "${match.kills ?: 0} / ${match.assists ?: 0} / ${match.deaths ?: 0}"
+    }
+
+    fun getWinRate(player: UserProfileQuery.Player): String {
+        return "${((player.winCount?.toFloat() ?: 0f) / (player.matchCount ?: 1) * 100).roundToInt()} %"
     }
 }

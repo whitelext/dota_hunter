@@ -4,6 +4,8 @@ query UserProfile($steamAccountId: Long! = 102459734) {
         winCount
         steamAccount {
             id
+            avatar
+            name
             seasonRank
         }
         matches(
@@ -11,12 +13,14 @@ query UserProfile($steamAccountId: Long! = 102459734) {
                 playerList: SINGLE}){
             id
             rank
+            durationSeconds
             players(steamAccountId: $steamAccountId){
                 matchId
                 isVictory
                 hero{
                     id
                     name
+                    displayName
                 }
                 kills
                 deaths
