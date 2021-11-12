@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">dota_hunter</string>
 
-    <string name="game_count">%1$d m</string>
+    <string name="game_count">%1$d matches</string>
     <string name="add_to_favorites_label">Add to favorites</string>
     <string name="loading_text">Loading...</string>
     <string name="lose_match">LOSE</string>

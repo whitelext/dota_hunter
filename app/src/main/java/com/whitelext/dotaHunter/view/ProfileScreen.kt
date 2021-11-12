@@ -17,6 +17,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -66,7 +67,7 @@ private fun UserCard(
     Row(
         modifier = Modifier
             .padding(7.dp)
-            .padding(vertical = 8.dp)
+            .padding(top = 8.dp, bottom = 4.dp)
             .clip(shape = RoundedCornerShape(15.dp))
             .background(color = PlayerField)
             .fillMaxWidth()
@@ -80,9 +81,10 @@ private fun UserCard(
             verticalArrangement = Arrangement.Center
         ) {
             Row(
-                verticalAlignment = Alignment.Top,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(end = 4.dp)
             ) {
+                Rank(index = player.steamAccount?.seasonRank.toString().toIntOrNull())
                 Text(
                     text = player?.steamAccount?.name ?: stringResource(R.string.loading_text),
                     Modifier
@@ -90,30 +92,31 @@ private fun UserCard(
                         .fillMaxWidth(0.9f),
                     fontFamily = poppinsFamily,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp
+                    fontSize = 22.sp
                 )
-                IconButton(
-                    onClick = { onAddToFavoritesClickListener((player.steamAccount?.id as BigDecimal).toLong()) },
-                    modifier = Modifier.padding(end = 5.dp)
-                ) {
-                    Icon(
-                        // TODO: if (player in favorites) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder
-                        imageVector = Icons.Rounded.FavoriteBorder,
-                        contentDescription = stringResource(R.string.add_to_favorites_label),
-                        tint = MaterialTheme.colors.onSurface,
-                    )
-                }
             }
-            Row {
+            Row(
+                verticalAlignment = Alignment.Bottom,
+                ) {
                 if (player != null) {
-                    Rank(index = player.steamAccount?.seasonRank.toString().toIntOrNull())
-                    TextLabelOval(text = Utils.getWinRate(player))
                     TextLabelOval(
                         text = stringResource(
                             R.string.game_count,
                             player.matchCount ?: 0
                         )
                     )
+                    TextLabelOval(text = Utils.getWinRate(player))
+                    IconButton(
+                        onClick = { onAddToFavoritesClickListener((player.steamAccount?.id as BigDecimal).toLong()) },
+                        modifier = Modifier.padding(end = 10.dp).size(75.dp)
+                    ) {
+                        Icon(
+                            // TODO: if (player in favorites) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder
+                            imageVector = Icons.Rounded.FavoriteBorder,
+                            contentDescription = stringResource(R.string.add_to_favorites_label),
+                            tint = MaterialTheme.colors.onSurface,
+                        )
+                    }
                 }
             }
         }
@@ -168,8 +171,8 @@ private fun Match(match: UserProfileQuery.Match) {
                         .map { itemId -> if (itemId == null) -1 else (itemId as BigDecimal).toShort() })
                 }
                 Row(verticalAlignment = Alignment.Bottom) {
-                    TextLabelOval(Utils.getKillsAssistsDeaths(it), modifier = Modifier.fillMaxWidth(0.65f))
-                    match.durationSeconds?.let { TextLabelOval(Utils.getDuration(match.durationSeconds)) }
+                    TextLabelOval(Utils.getKillsAssistsDeaths(it), modifier = Modifier.fillMaxWidth(0.5f))
+                    match.durationSeconds?.let { TextLabelOval(Utils.getDuration(match.durationSeconds), modifier = Modifier.fillMaxWidth()) }
                 }
 
             }
@@ -210,6 +213,7 @@ private fun ItemIcon(itemUrl: String, itemName: String) {
         modifier = Modifier
             .padding(horizontal = 3.dp)
             .size(65.dp)
+            .clip(shape = RoundedCornerShape(5.dp)),
     )
 
 }
@@ -217,5 +221,5 @@ private fun ItemIcon(itemUrl: String, itemName: String) {
 @Composable fun EmptySpace() {
     Spacer(modifier = Modifier
         .padding(horizontal = 3.dp)
-        .size(65.dp))
+        .size(70.dp))
 }
