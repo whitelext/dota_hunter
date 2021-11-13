@@ -1,7 +1,6 @@
 package com.whitelext.dotaHunter.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -133,7 +132,9 @@ private fun ShowResult(
             .fillMaxHeight()
     ) {
         items(userList.size) { userIndex ->
-            ShowPlayer(player = userList[userIndex], onClick = {navController.navigate("${Screen.Profile.route}/${(userList[userIndex].id as BigDecimal).toLong()}")})
+            ShowPlayer(player = userList[userIndex], onClick = {
+                navController.navigate(Screen.ProfileDetail.createRoute((userList[userIndex].id as BigDecimal).toLong()))
+            })
         }
     }
 }
@@ -173,7 +174,11 @@ private fun ShowPlayer(
                 )
             }
             Row {
-                TextLabelOval(Utils.getLastMatchDateTime(player.lastMatchDateTime.toString().toLongOrNull()))
+                TextLabelOval(
+                    Utils.getLastMatchDateTime(
+                        player.lastMatchDateTime.toString().toLongOrNull()
+                    )
+                )
             }
         }
     }
