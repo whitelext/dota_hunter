@@ -12,8 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
@@ -57,10 +59,15 @@ object CommonComponents {
     }
 
     @Composable
-    fun TextLabelOval(text: String,
-                      textColor: Color = BackgroundDark,
-                      backgroundColor: Color = Transparent,
-                      modifier: Modifier = Modifier) {
+    fun TextLabelRounded(
+        modifier: Modifier = Modifier,
+        text: String,
+        borderWidth: Dp = 2.dp,
+        fontWeight: FontWeight = FontWeight.SemiBold,
+        textColor: Color = BackgroundDark,
+        backgroundColor: Color = Transparent,
+        fontFamily: FontFamily = poppinsFamily
+    ) {
         Text(
             text = text,
             modifier = modifier
@@ -68,19 +75,20 @@ object CommonComponents {
                 .padding(bottom = 7.dp)
                 .background(
                     color = backgroundColor,
-                    shape = RoundedCornerShape(40.dp))
+                    shape = RoundedCornerShape(40.dp)
+                )
                 .border(
-                    width = 2.dp,
-                    color = BackgroundDark,
-                    shape = RoundedCornerShape(40.dp))
+                    width = borderWidth,
+                    color = textColor,
+                    shape = RoundedCornerShape(40.dp)
+                )
                 .padding(8.dp),
             color = textColor,
-            fontFamily = poppinsFamily,
+            fontFamily = fontFamily,
             textAlign = TextAlign.Center,
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = fontWeight,
             fontSize = 16.sp,
             maxLines = 1
-            )
+        )
     }
-
 }

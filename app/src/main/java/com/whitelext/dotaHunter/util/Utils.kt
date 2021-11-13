@@ -31,13 +31,13 @@ object Utils {
     }
 
     fun getHeroUrl(displayName: String?): String {
-        val preparedName = displayName?.replace(" ", "_")
-        return "https://www.dota2protracker.com/static/icons/${preparedName}_minimap_icon.png"
+        val preparedName = displayName?.replace(" ", "_")?.lowercase()
+        return "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/$preparedName.png"
     }
 
     fun getItemUrl(itemName: String) = buildString {
         append("https://cdn.stratz.com/images/dota2/items/")
-        append("${itemName}.png")
+        append("$itemName.png")
     }
 
     fun getRankUrl(value: Int?) = buildString {
@@ -64,14 +64,24 @@ object Utils {
         }
     }
 
+    fun convertUnixToDate(value: Long?): String {
+        return if (value != null) {
+            val date = Date(value * 1000)
+            val format = SimpleDateFormat("dd/MM/yy", Locale.ROOT)
+            format.format(date)
+        } else {
+            ""
+        }
+    }
+
     fun getDuration(durationSeconds: Int): String {
         val minutes = durationSeconds / 60
-        val seconds =  durationSeconds - minutes * 60
+        val seconds = durationSeconds - minutes * 60
         return "$minutes:${if (seconds < 10) "0$seconds" else seconds}"
     }
 
-    fun getKillsAssistsDeaths(match: UserProfileQuery.Player1): String {
-        return "${match.kills ?: 0} / ${match.assists ?: 0} / ${match.deaths ?: 0}"
+    fun getKillsDeathsAssists(match: UserProfileQuery.Player1): String {
+        return "${match.kills ?: 0} / ${match.deaths ?: 0} / ${match.assists ?: 0}"
     }
 
     fun getWinRate(player: UserProfileQuery.Player): String {

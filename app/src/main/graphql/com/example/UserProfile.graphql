@@ -10,7 +10,10 @@ query UserProfile($steamAccountId: Long! = 102459734) {
         }
         matches(
             request: {
-                playerList: SINGLE}){
+                playerList: SINGLE
+                take: 100
+            }){
+            startDateTime
             id
             rank
             durationSeconds
@@ -21,7 +24,9 @@ query UserProfile($steamAccountId: Long! = 102459734) {
                     id
                     name
                     displayName
+                    shortName
                 }
+
                 kills
                 deaths
                 assists

@@ -29,8 +29,7 @@ class SearchViewModel @Inject constructor(private val searchRepository: SearchRe
             }
             Utils.asyncCall(
                 coroutineScope = viewModelScope,
-                destinationFunction = ::performSearchUsers,
-                waitMs = 300L
+                destinationFunction = ::performSearchUsers
             ).invoke()
         }
     }

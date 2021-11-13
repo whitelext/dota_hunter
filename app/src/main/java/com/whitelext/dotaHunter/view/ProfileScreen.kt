@@ -32,9 +32,8 @@ import com.whitelext.dotaHunter.ui.theme.*
 import com.whitelext.dotaHunter.util.Utils
 import com.whitelext.dotaHunter.view.CommonComponents.ProfilePhoto
 import com.whitelext.dotaHunter.view.CommonComponents.Rank
-import com.whitelext.dotaHunter.view.CommonComponents.TextLabelOval
+import com.whitelext.dotaHunter.view.CommonComponents.TextLabelRounded
 import java.math.BigDecimal
-
 
 @Composable
 fun ProfileScreen(
@@ -51,10 +50,10 @@ fun ProfileScreen(
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
-        player?.let {
+        player?.let { player ->
             // TODO: implement onAddToFavoritesClickListener
-            UserCard(player = player!!, onAddToFavoritesClickListener = { false })
-            player!!.matches?.let { Matches(matches = player!!.matches!!.filterNotNull()) }
+            UserCard(player = player, onAddToFavoritesClickListener = { false })
+            player.matches?.let { Matches(matches = player.matches.filterNotNull()) }
         }
     }
 }
@@ -67,13 +66,16 @@ private fun UserCard(
     Row(
         modifier = Modifier
             .padding(7.dp)
-            .padding(top = 8.dp, bottom = 4.dp)
             .clip(shape = RoundedCornerShape(15.dp))
             .background(color = PlayerField)
             .fillMaxWidth()
+            .height(135.dp)
     ) {
-        Column {
-            ProfilePhoto(id = player?.steamAccount?.avatar)
+        Column(
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxHeight()
+        ) {
+            ProfilePhoto(id = player.steamAccount?.avatar)
         }
         Column(
             verticalArrangement = Arrangement.Center
@@ -84,7 +86,7 @@ private fun UserCard(
             ) {
                 Rank(index = player.steamAccount?.seasonRank.toString().toIntOrNull())
                 Text(
-                    text = player?.steamAccount?.name ?: stringResource(R.string.loading_text),
+                    text = player.steamAccount?.name ?: stringResource(R.string.loading_text),
                     Modifier
                         .padding(vertical = 5.dp)
                         .fillMaxWidth(0.9f),
@@ -95,26 +97,26 @@ private fun UserCard(
             }
             Row(
                 verticalAlignment = Alignment.Bottom,
-                ) {
-                if (player != null) {
-                    TextLabelOval(
-                        text = stringResource(
-                            R.string.game_count,
-                            player.matchCount ?: 0
-                        )
+            ) {
+                TextLabelRounded(
+                    text = stringResource(
+                        R.string.game_count,
+                        player.matchCount ?: 0
                     )
-                    TextLabelOval(text = Utils.getWinRate(player))
-                    IconButton(
-                        onClick = { onAddToFavoritesClickListener((player.steamAccount?.id as BigDecimal).toLong()) },
-                        modifier = Modifier.padding(end = 10.dp).size(75.dp)
-                    ) {
-                        Icon(
-                            // TODO: if (player in favorites) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder
-                            imageVector = Icons.Rounded.FavoriteBorder,
-                            contentDescription = stringResource(R.string.add_to_favorites_label),
-                            tint = MaterialTheme.colors.onSurface,
-                        )
-                    }
+                )
+                TextLabelRounded(text = Utils.getWinRate(player))
+                IconButton(
+                    onClick = { onAddToFavoritesClickListener((player.steamAccount?.id as BigDecimal).toLong()) },
+                    modifier = Modifier
+                        .padding(end = 10.dp)
+                        .size(75.dp)
+                ) {
+                    Icon(
+                        // if (player in favorites) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder
+                        imageVector = Icons.Rounded.FavoriteBorder,
+                        contentDescription = stringResource(R.string.add_to_favorites_label),
+                        tint = MaterialTheme.colors.onSurface,
+                    )
                 }
             }
         }
@@ -131,48 +133,72 @@ private fun Matches(matches: List<UserProfileQuery.Match>) {
 @Composable
 private fun Match(match: UserProfileQuery.Match) {
     match.players?.first()?.let {
-        Row(
+        Column(
             modifier = Modifier
                 .padding(8.dp)
                 .clip(shape = RoundedCornerShape(10.dp))
                 .background(color = MatchField)
                 .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalArrangement = Arrangement.Center
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(0.33f),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 6.dp)
             ) {
                 Image(
-                    painter = rememberImagePainter(Utils.getHeroUrl(it.hero?.displayName)),
+                    painter = rememberImagePainter(Utils.getHeroUrl(it.hero?.shortName)),
                     contentDescription = null,
                     modifier = Modifier
-                        .padding(15.dp)
-                        .size(100.dp)
+                        .clip(
+                            RoundedCornerShape(10.dp)
+                        )
+                        .width(180.dp)
+                        .height(100.dp)
+                        .align(Alignment.CenterVertically)
                 )
-                it.isVictory?.let { isVictory ->
-                    TextLabelOval(
-                        text = stringResource(id = if (isVictory) R.string.win_match else R.string.lose_match),
-                        textColor = if (isVictory) GreenDark else RedDark,
-                        backgroundColor = if (isVictory) GreenLight else RedLight,
-                        modifier = Modifier.fillMaxWidth()
+
+                ItemsGrid(
+                    items = listOf(
+                        it.item0Id,
+                        it.item1Id,
+                        it.item2Id,
+                        it.item3Id,
+                        it.item4Id,
+                        it.item5Id
                     )
-                }
+                        // .map { itemId -> if (itemId == null) -1 else (itemId as BigDecimal).toShort() })
+                        .map { itemId -> (itemId as BigDecimal?)?.toShort() ?: -1 }
+                )
             }
 
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.End
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Row(verticalAlignment = Alignment.Bottom) {
-                    ItemsGrid(items = listOf(it.item0Id, it.item1Id, it.item2Id, it.item3Id, it.item4Id, it.item5Id)
-                        .map { itemId -> if (itemId == null) -1 else (itemId as BigDecimal).toShort() })
+                it.isVictory?.let { isVictory ->
+                    TextLabelRounded(
+                        text = Utils.convertUnixToDate(
+                            match.startDateTime.toString().toLongOrNull()
+                        ),
+                        textColor = if (isVictory) Win else Lose,
+                        backgroundColor = MatchField,
+                        modifier = Modifier.weight(1f),
+                        fontWeight = FontWeight.ExtraBold,
+                        borderWidth = 5.dp
+                    )
                 }
-                Row(verticalAlignment = Alignment.Bottom) {
-                    TextLabelOval(Utils.getKillsAssistsDeaths(it), modifier = Modifier.fillMaxWidth(0.5f))
-                    match.durationSeconds?.let { TextLabelOval(Utils.getDuration(match.durationSeconds), modifier = Modifier.fillMaxWidth()) }
+                TextLabelRounded(
+                    text = Utils.getKillsDeathsAssists(it),
+                    modifier = Modifier.weight(1f)
+                )
+                match.durationSeconds?.let {
+                    TextLabelRounded(
+                        text = Utils.getDuration(match.durationSeconds),
+                        modifier = Modifier.weight(1f)
+                    )
                 }
-
             }
         }
     }
@@ -181,7 +207,7 @@ private fun Match(match: UserProfileQuery.Match) {
 @Composable
 private fun ItemsGrid(items: List<Short>) {
 
-    Column (modifier = Modifier.padding(end = 7.dp, top = 16.dp, bottom = 4.dp)){
+    Column {
         Row {
             for (i in 0..2) {
                 val itemName = ItemStore.getItemById(items[i].toInt())
@@ -212,12 +238,12 @@ private fun ItemIcon(itemUrl: String, itemName: String) {
             .padding(horizontal = 3.dp)
             .width(65.dp)
             .height(55.dp)
-            .clip(RoundedCornerShape(40))
+            .clip(RoundedCornerShape(10.dp))
     )
-
 }
 
-@Composable fun EmptySpace() {
+@Composable
+fun EmptySpace() {
     Spacer(
         modifier = Modifier
             .padding(top = 4.dp)
@@ -231,5 +257,4 @@ private fun ItemIcon(itemUrl: String, itemName: String) {
                 shape = RoundedCornerShape(30)
             )
     )
-
 }

@@ -37,7 +37,7 @@ import com.whitelext.dotaHunter.util.Screen
 import com.whitelext.dotaHunter.util.Utils
 import com.whitelext.dotaHunter.view.CommonComponents.ProfilePhoto
 import com.whitelext.dotaHunter.view.CommonComponents.Rank
-import com.whitelext.dotaHunter.view.CommonComponents.TextLabelOval
+import com.whitelext.dotaHunter.view.CommonComponents.TextLabelRounded
 import java.math.BigDecimal
 
 @Composable
@@ -174,8 +174,8 @@ private fun ShowPlayer(
                 )
             }
             Row {
-                TextLabelOval(
-                    Utils.getLastMatchDateTime(
+                TextLabelRounded(
+                    text = Utils.getLastMatchDateTime(
                         player.lastMatchDateTime.toString().toLongOrNull()
                     )
                 )
