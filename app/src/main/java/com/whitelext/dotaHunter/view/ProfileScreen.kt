@@ -133,12 +133,12 @@ private fun UserCard(
 @Composable
 private fun Matches(matches: List<UserProfileQuery.Match>) {
     LazyColumn {
-        items(matches.size) { i -> Match(matches[i]) }
+        items(matches.size) { i -> ShowMatch(match = matches[i]) }
     }
 }
 
 @Composable
-private fun Match(match: UserProfileQuery.Match) {
+private fun ShowMatch(match: UserProfileQuery.Match) {
     match.players?.first()?.let {
         Column(
             modifier = Modifier

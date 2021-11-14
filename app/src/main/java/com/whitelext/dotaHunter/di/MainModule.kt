@@ -37,6 +37,11 @@ object MainModule {
     }
 
     @Provides
+    fun provideMatchRepository(repositoryImpl: MatchRepositoryImpl): MatchRepository {
+        return repositoryImpl
+    }
+
+    @Provides
     fun provideNormalizedCache(): LruNormalizedCacheFactory {
         return LruNormalizedCacheFactory(
             EvictionPolicy.builder().maxSizeBytes(10 * 1024 * 1024L).build()
