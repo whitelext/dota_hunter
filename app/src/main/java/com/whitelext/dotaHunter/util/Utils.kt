@@ -57,7 +57,7 @@ object Utils {
     fun getLastMatchDateTime(value: Long?): String {
         return if (value != null) {
             val date = Date(value * 1000)
-            val format = SimpleDateFormat("dd/MM/yy", Locale.ROOT)
+            val format = SimpleDateFormat("dd.MM.yy", Locale.ROOT)
             "last game: ${format.format(date)}"
         } else {
             "non active"
@@ -67,7 +67,7 @@ object Utils {
     fun convertUnixToDate(value: Long?): String {
         return if (value != null) {
             val date = Date(value * 1000)
-            val format = SimpleDateFormat("dd/MM/yy", Locale.ROOT)
+            val format = SimpleDateFormat("dd.MM.yy", Locale.ROOT)
             format.format(date)
         } else {
             ""
@@ -87,4 +87,7 @@ object Utils {
     fun getWinRate(player: UserProfileQuery.Player): String {
         return "${((player.winCount?.toFloat() ?: 0f) / (player.matchCount ?: 1) * 100).roundToInt()} %"
     }
+
+    fun getResult(isRadiantWin: Boolean) = if (isRadiantWin) "Radient's Victory" else "Dire's Victory"
+
 }

@@ -2,8 +2,10 @@ package com.whitelext.dotaHunter.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -162,12 +164,15 @@ private fun ShowPlayer(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(end = 4.dp)
+                modifier = Modifier
+                    .padding(end = 4.dp)
+                    .horizontalScroll(state = rememberScrollState())
             ) {
                 Rank(index = player.seasonRank.toString().toIntOrNull())
                 Text(
                     text = player.name ?: "ErrorName",
-                    Modifier.padding(vertical = 5.dp),
+                    Modifier
+                        .padding(vertical = 5.dp),
                     fontFamily = poppinsFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp

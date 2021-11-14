@@ -72,7 +72,7 @@ object CommonComponents {
             text = text,
             modifier = modifier
                 .padding(8.dp)
-                .padding(bottom = 7.dp)
+//                .padding(bottom = 7.dp)
                 .background(
                     color = backgroundColor,
                     shape = RoundedCornerShape(40.dp)

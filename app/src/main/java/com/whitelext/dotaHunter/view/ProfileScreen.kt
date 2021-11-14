@@ -1,8 +1,6 @@
 package com.whitelext.dotaHunter.view
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,6 +16,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -29,6 +28,7 @@ import com.whitelext.dotaHunter.ProfileViewModel
 import com.whitelext.dotaHunter.R
 import com.whitelext.dotaHunter.domain.ItemStore
 import com.whitelext.dotaHunter.ui.theme.*
+import com.whitelext.dotaHunter.util.Constants.THIRTYTHIRD
 import com.whitelext.dotaHunter.util.Utils
 import com.whitelext.dotaHunter.view.CommonComponents.ProfilePhoto
 import com.whitelext.dotaHunter.view.CommonComponents.Rank
@@ -72,8 +72,7 @@ private fun UserCard(
             .height(135.dp)
     ) {
         Column(
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxHeight()
+            verticalArrangement = Arrangement.Center
         ) {
             ProfilePhoto(id = player.steamAccount?.avatar)
         }
@@ -82,7 +81,9 @@ private fun UserCard(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(end = 4.dp)
+                modifier = Modifier
+                    .padding(end = 4.dp)
+                    .horizontalScroll(state = rememberScrollState(0))
             ) {
                 Rank(index = player.steamAccount?.seasonRank.toString().toIntOrNull())
                 Text(
@@ -96,26 +97,32 @@ private fun UserCard(
                 )
             }
             Row(
-                verticalAlignment = Alignment.Bottom,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 TextLabelRounded(
                     text = stringResource(
                         R.string.game_count,
-                        player.matchCount ?: 0
-                    )
+                        player.matchCount ?: 0,
+                    ),
+                    modifier = Modifier.weight(1f)
                 )
-                TextLabelRounded(text = Utils.getWinRate(player))
+                TextLabelRounded(
+                    text = Utils.getWinRate(player),
+                    modifier = Modifier.weight(1f)
+                )
                 IconButton(
                     onClick = { onAddToFavoritesClickListener((player.steamAccount?.id as BigDecimal).toLong()) },
                     modifier = Modifier
                         .padding(end = 10.dp)
                         .size(75.dp)
+                        .weight(1f)
                 ) {
                     Icon(
                         // if (player in favorites) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder
                         imageVector = Icons.Rounded.FavoriteBorder,
                         contentDescription = stringResource(R.string.add_to_favorites_label),
                         tint = MaterialTheme.colors.onSurface,
+                        modifier = Modifier.weight(1f)
                     )
                 }
             }
@@ -146,16 +153,19 @@ private fun Match(match: UserProfileQuery.Match) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 6.dp)
+                    .padding(horizontal = 5.dp)
             ) {
                 Image(
                     painter = rememberImagePainter(Utils.getHeroUrl(it.hero?.shortName)),
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .clip(
-                            RoundedCornerShape(10.dp)
-                        )
-                        .width(180.dp)
-                        .height(100.dp)
+                        .padding()
+                        .padding(end = 2.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .weight(1f)
+                        .fillMaxWidth(fraction = THIRTYTHIRD)
+                        .height(94.dp)
                         .align(Alignment.CenterVertically)
                 )
 
@@ -234,10 +244,11 @@ private fun ItemIcon(itemUrl: String, itemName: String) {
     Image(
         painter = rememberImagePainter(itemUrl),
         contentDescription = itemName,
+        contentScale = ContentScale.Crop,
         modifier = Modifier
-            .padding(horizontal = 3.dp)
-            .width(65.dp)
-            .height(55.dp)
+            .padding(horizontal = 3.dp, vertical = 2.dp)
+            .width(55.dp)
+            .height(45.dp)
             .clip(RoundedCornerShape(10.dp))
     )
 }
@@ -246,15 +257,14 @@ private fun ItemIcon(itemUrl: String, itemName: String) {
 fun EmptySpace() {
     Spacer(
         modifier = Modifier
-            .padding(top = 4.dp)
-            .padding(horizontal = 3.dp)
-            .width(65.dp)
-            .height(48.dp)
-            .clip(RoundedCornerShape(30))
+            .padding(horizontal = 3.dp, vertical = 2.dp)
+            .width(55.dp)
+            .height(45.dp)
+            .clip(RoundedCornerShape(10.dp))
             .border(
                 width = 1.dp,
                 color = BackgroundDark,
-                shape = RoundedCornerShape(30)
+                shape = RoundedCornerShape(10.dp)
             )
     )
 }
