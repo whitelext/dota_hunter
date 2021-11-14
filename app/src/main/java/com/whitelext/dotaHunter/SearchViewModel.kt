@@ -27,7 +27,7 @@ class SearchViewModel @Inject constructor(private val searchRepository: SearchRe
                 _usersLiveData.value = emptyList()
                 return
             }
-            Utils.debounceCall(
+            Utils.asyncCall(
                 coroutineScope = viewModelScope,
                 destinationFunction = ::performSearchUsers
             ).invoke()

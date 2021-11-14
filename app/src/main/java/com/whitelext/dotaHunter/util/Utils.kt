@@ -1,21 +1,21 @@
 package com.whitelext.dotaHunter.util
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.example.UserProfileQuery
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 import kotlin.reflect.KSuspendFunction0
 
 object Utils {
 
-    fun debounceCall(
-        waitMs: Long = 300L,
+    var debounceJob: Job? = null
+
+    fun asyncCall(
+        waitMs: Long = 0L,
         coroutineScope: CoroutineScope,
         destinationFunction: KSuspendFunction0<Unit>
     ): () -> Unit {
-        var debounceJob: Job? = null
         return {
             debounceJob?.cancel()
             debounceJob = coroutineScope.launch {
@@ -30,9 +30,14 @@ object Utils {
         append(suffix)
     }
 
+    fun getHeroUrl(displayName: String?): String {
+        val preparedName = displayName?.replace(" ", "_")?.lowercase()
+        return "https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/$preparedName.png"
+    }
+
     fun getItemUrl(itemName: String) = buildString {
         append("https://cdn.stratz.com/images/dota2/items/")
-        append("${itemName}.png")
+        append("$itemName.png")
     }
 
     fun getRankUrl(value: Int?) = buildString {
@@ -52,10 +57,37 @@ object Utils {
     fun getLastMatchDateTime(value: Long?): String {
         return if (value != null) {
             val date = Date(value * 1000)
-            val format = SimpleDateFormat("dd/MM/yy", Locale.ROOT)
+            val format = SimpleDateFormat("dd.MM.yy", Locale.ROOT)
             "last game: ${format.format(date)}"
         } else {
             "non active"
         }
     }
+
+    fun convertUnixToDate(value: Long?): String {
+        return if (value != null) {
+            val date = Date(value * 1000)
+            val format = SimpleDateFormat("dd.MM.yy", Locale.ROOT)
+            format.format(date)
+        } else {
+            ""
+        }
+    }
+
+    fun getDuration(durationSeconds: Int): String {
+        val minutes = durationSeconds / 60
+        val seconds = durationSeconds - minutes * 60
+        return "$minutes:${if (seconds < 10) "0$seconds" else seconds}"
+    }
+
+    fun getKillsDeathsAssists(match: UserProfileQuery.Player1): String {
+        return "${match.kills ?: 0} / ${match.deaths ?: 0} / ${match.assists ?: 0}"
+    }
+
+    fun getWinRate(player: UserProfileQuery.Player): String {
+        return "${((player.winCount?.toFloat() ?: 0f) / (player.matchCount ?: 1) * 100).roundToInt()} %"
+    }
+
+    fun getResult(isRadiantWin: Boolean) = if (isRadiantWin) "Radient's Victory" else "Dire's Victory"
+
 }

@@ -11,11 +11,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.whitelext.dotaHunter.ui.theme.BottomNavColor
+import com.whitelext.dotaHunter.util.Constants
 import com.whitelext.dotaHunter.util.Screen
 import kotlinx.coroutines.FlowPreview
 
@@ -25,7 +28,7 @@ fun Home() {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(
+            if (currentRoute(navController = navController) != Screen.ProfileDetail.route) BottomNavigationBar(
                 controller = navController,
                 onNavigationSelected = { screen ->
                     navController.navigate(screen.route) {
@@ -57,10 +60,17 @@ fun Navigation(navController: NavHostController, modifier: Modifier) {
 
     NavHost(navController, startDestination = Screen.Search.route, modifier = modifier) {
         composable(Screen.Search.route) {
-            SearchScreen()
+            SearchScreen(navController = navController)
         }
         composable(Screen.Favorites.route) {
             FavoritesScreen()
+        }
+        composable(
+            route = Screen.ProfileDetail.route,
+            arguments = listOf(navArgument(Constants.PROFILE_ID) { type = NavType.LongType })
+        ) {
+            val profileId = it.arguments?.getLong(Constants.PROFILE_ID) ?: 0L
+            ProfileScreen(profileId = profileId)
         }
 
     }

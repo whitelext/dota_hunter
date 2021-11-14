@@ -27,7 +27,7 @@ class ItemsViewModel @Inject constructor(private val itemsRepository: ItemsRepos
     }
 
     private fun getItems() {
-        Utils.debounceCall(
+        Utils.asyncCall(
             coroutineScope = viewModelScope,
             destinationFunction = ::performGetItems
         ).invoke()
