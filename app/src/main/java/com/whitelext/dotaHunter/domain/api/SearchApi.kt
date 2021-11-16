@@ -10,6 +10,18 @@ import javax.inject.Inject
 
 class SearchApi @Inject constructor(private val apolloClient: ApolloClient) {
 
+    private fun UserListQuery.ProPlayer.toTypical(): UserListQuery.Player {
+        val (__typename, id, avatar, name, seasonRank, lastMatchDateTime) = this
+        return UserListQuery.Player(
+            __typename,
+            id,
+            avatar,
+            name,
+            seasonRank,
+            lastMatchDateTime
+        )
+    }
+
     suspend fun getUsers(userNameQuery: String): Resource<List<UserListQuery.Player>> {
         val response = try {
             apolloClient.query(UserListQuery(userNameQuery)).await()
@@ -17,17 +29,22 @@ class SearchApi @Inject constructor(private val apolloClient: ApolloClient) {
             null
         }
 
-        val users = response?.data?.stratz?.search?.players?.filterNotNull()
+        val users = response?.data?.stratz?.search?.players?.filterNotNull()?.toMutableList()
+        val proUsers =
+            response?.data?.stratz?.search?.proPlayers?.mapNotNull { it?.toTypical() }
 
-        return if (users != null && !response.hasErrors()) {
-            Resource.Success(users)
+        val concat = users?.let { if (proUsers != null) it.apply { addAll(proUsers) } else it }
+
+        return if (concat != null && !response.hasErrors()) {
+            Resource.Success(concat)
         } else {
-            Resource.Error(response?.errors?.let {
-                ResourceError.API_ERROR.apply {
-                    message = it.first().message
-                }
-            } ?: ResourceError.UNKNOWN)
+            Resource.Error(
+                response?.errors?.let {
+                    ResourceError.API_ERROR.apply {
+                        message = it.first().message
+                    }
+                } ?: ResourceError.NO_INTERNET
+            )
         }
-
     }
 }

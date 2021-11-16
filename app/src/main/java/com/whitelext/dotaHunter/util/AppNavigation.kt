@@ -8,6 +8,10 @@ sealed class Screen(var route: String, var icon: Int, var title: String) {
     object ProfileDetail : AppNavigation("profile/{profileId}") {
         fun createRoute(profileId: Long) = "profile/$profileId"
     }
+
+    object MatchDetail : AppNavigation("match/{matchId}") {
+        fun createRoute(matchId: Long) = "match/$matchId"
+    }
 }
 
 sealed class AppNavigation(val route: String)

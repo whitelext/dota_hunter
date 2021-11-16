@@ -23,11 +23,13 @@ class GetItemsApi @Inject constructor(private val apolloClient: ApolloClient) {
         return if (constants != null && !response.hasErrors()) {
             Resource.Success(constants)
         } else {
-            Resource.Error(response?.errors?.let {
-                ResourceError.API_ERROR.apply {
-                    message = it.first().message
-                }
-            } ?: ResourceError.UNKNOWN)
+            Resource.Error(
+                response?.errors?.let {
+                    ResourceError.API_ERROR.apply {
+                        message = it.first().message
+                    }
+                } ?: ResourceError.UNKNOWN
+            )
         }
     }
 }

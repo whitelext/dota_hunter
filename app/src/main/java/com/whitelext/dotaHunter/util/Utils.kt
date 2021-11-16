@@ -1,5 +1,6 @@
 package com.whitelext.dotaHunter.util
 
+import com.example.MatchStatsQuery
 import com.example.UserProfileQuery
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
@@ -80,14 +81,43 @@ object Utils {
         return "$minutes:${if (seconds < 10) "0$seconds" else seconds}"
     }
 
-    fun getKillsDeathsAssists(match: UserProfileQuery.Player1): String {
+    fun getKillsDeathsAssistsProfile(match: UserProfileQuery.Player1): String {
         return "${match.kills ?: 0} / ${match.deaths ?: 0} / ${match.assists ?: 0}"
+    }
+
+    fun getKillsDeathsAssists(match: MatchStatsQuery.Player): String {
+        return "${match.kills ?: 0} / ${match.deaths ?: 0} / ${match.assists ?: 0}"
+    }
+
+    fun getGpmXpm(match: MatchStatsQuery.Player): String {
+        return "${match.goldPerMinute} / ${match.experiencePerMinute}"
     }
 
     fun getWinRate(player: UserProfileQuery.Player): String {
         return "${((player.winCount?.toFloat() ?: 0f) / (player.matchCount ?: 1) * 100).roundToInt()} %"
     }
 
-    fun getResult(isRadiantWin: Boolean) = if (isRadiantWin) "Radient's Victory" else "Dire's Victory"
+    fun getResult(isRadiantWin: Boolean) =
+        if (isRadiantWin) "Radiant Victory" else "Dire Victory"
 
+    fun getRadiantKills(match: MatchStatsQuery.Match): Int {
+//        match.players?.groupBy { it?.isRadiant == true }?.map { it.value }.sumOf {  }
+        var sum = 0
+        match.players?.forEach {
+            if (it != null) {
+                if (it.isRadiant == true) sum += it.kills?.toString()?.toInt() ?: 0
+            }
+        }
+        return sum
+    }
+
+    fun getDireKills(match: MatchStatsQuery.Match): Int {
+        var sum = 0
+        match.players?.forEach {
+            if (it != null) {
+                if (it.isRadiant == false) sum += it.kills?.toString()?.toInt() ?: 0
+            }
+        }
+        return sum
+    }
 }

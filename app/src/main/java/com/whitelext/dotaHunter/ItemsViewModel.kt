@@ -1,9 +1,8 @@
 package com.whitelext.dotaHunter
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import android.widget.Toast
+import androidx.lifecycle.*
 import com.example.ItemsListQuery
 import com.whitelext.dotaHunter.common.Resource
 import com.whitelext.dotaHunter.domain.repository.ItemsRepository
@@ -12,8 +11,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ItemsViewModel @Inject constructor(private val itemsRepository: ItemsRepository) :
-    ViewModel() {
+class ItemsViewModel @Inject constructor(
+    private val itemsRepository: ItemsRepository,
+    application: Application
+) : AndroidViewModel(application) {
 
     private val _itemsLiveData by lazy { MutableLiveData<List<ItemsListQuery.Item>>() }
     val itemsLiveData: LiveData<List<ItemsListQuery.Item>> = _itemsLiveData
@@ -39,7 +40,7 @@ class ItemsViewModel @Inject constructor(private val itemsRepository: ItemsRepos
                 _itemsLiveData.value = response.data
             }
             is Resource.Error -> {
-                // TODO: ui notification
+                Toast.makeText(getApplication(), response.error.message, Toast.LENGTH_SHORT).show()
             }
             else -> {
                 // TODO: same ui notification

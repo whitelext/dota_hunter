@@ -22,14 +22,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.UserProfileQuery
 import com.whitelext.dotaHunter.ProfileViewModel
 import com.whitelext.dotaHunter.R
-import com.whitelext.dotaHunter.domain.ItemStore
 import com.whitelext.dotaHunter.ui.theme.*
 import com.whitelext.dotaHunter.util.Constants.THIRTYTHIRD
+import com.whitelext.dotaHunter.util.Screen
 import com.whitelext.dotaHunter.util.Utils
+import com.whitelext.dotaHunter.view.CommonComponents.ItemsGrid
 import com.whitelext.dotaHunter.view.CommonComponents.ProfilePhoto
 import com.whitelext.dotaHunter.view.CommonComponents.Rank
 import com.whitelext.dotaHunter.view.CommonComponents.TextLabelRounded
@@ -38,7 +40,8 @@ import java.math.BigDecimal
 @Composable
 fun ProfileScreen(
     profileViewModel: ProfileViewModel = hiltViewModel(),
-    profileId: Long
+    profileId: Long,
+    navController: NavController
 ) {
 
     val player by profileViewModel.profileData.observeAsState()
@@ -53,7 +56,7 @@ fun ProfileScreen(
         player?.let { player ->
             // TODO: implement onAddToFavoritesClickListener
             UserCard(player = player, onAddToFavoritesClickListener = { false })
-            player.matches?.let { Matches(matches = player.matches.filterNotNull()) }
+            player.matches?.let { Matches(matches = player.matches.filterNotNull(), navController) }
         }
     }
 }
@@ -131,21 +134,35 @@ private fun UserCard(
 }
 
 @Composable
-private fun Matches(matches: List<UserProfileQuery.Match>) {
+private fun Matches(
+    matches: List<UserProfileQuery.Match>,
+    navController: NavController
+) {
     LazyColumn {
-        items(matches.size) { i -> ShowMatch(match = matches[i]) }
+        items(matches.size) { i ->
+            ShowMatch(
+                match = matches[i],
+                onClick = {
+                    navController.navigate(Screen.MatchDetail.createRoute((matches[i].id as BigDecimal).toLong()))
+                }
+            )
+        }
     }
 }
 
 @Composable
-private fun ShowMatch(match: UserProfileQuery.Match) {
+private fun ShowMatch(
+    match: UserProfileQuery.Match,
+    onClick: () -> Unit
+) {
     match.players?.first()?.let {
         Column(
             modifier = Modifier
                 .padding(8.dp)
                 .clip(shape = RoundedCornerShape(10.dp))
                 .background(color = MatchField)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .clickable { onClick() },
             verticalArrangement = Arrangement.Center
         ) {
             Row(
@@ -200,7 +217,7 @@ private fun ShowMatch(match: UserProfileQuery.Match) {
                     )
                 }
                 TextLabelRounded(
-                    text = Utils.getKillsDeathsAssists(it),
+                    text = Utils.getKillsDeathsAssistsProfile(it),
                     modifier = Modifier.weight(1f)
                 )
                 match.durationSeconds?.let {
@@ -212,59 +229,4 @@ private fun ShowMatch(match: UserProfileQuery.Match) {
             }
         }
     }
-}
-
-@Composable
-private fun ItemsGrid(items: List<Short>) {
-
-    Column {
-        Row {
-            for (i in 0..2) {
-                val itemName = ItemStore.getItemById(items[i].toInt())
-                if (items[i] < 0 || itemName == null) EmptySpace() else ItemIcon(
-                    itemUrl = Utils.getItemUrl(itemName),
-                    itemName = itemName
-                )
-            }
-        }
-        Row {
-            for (i in 3..5) {
-                val itemName = ItemStore.getItemById(items[i].toInt())
-                if (items[i] < 0 || itemName == null) EmptySpace() else ItemIcon(
-                    itemUrl = Utils.getItemUrl(itemName),
-                    itemName = itemName
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ItemIcon(itemUrl: String, itemName: String) {
-    Image(
-        painter = rememberImagePainter(itemUrl),
-        contentDescription = itemName,
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .padding(horizontal = 3.dp, vertical = 2.dp)
-            .width(55.dp)
-            .height(45.dp)
-            .clip(RoundedCornerShape(10.dp))
-    )
-}
-
-@Composable
-fun EmptySpace() {
-    Spacer(
-        modifier = Modifier
-            .padding(horizontal = 3.dp, vertical = 2.dp)
-            .width(55.dp)
-            .height(45.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .border(
-                width = 1.dp,
-                color = BackgroundDark,
-                shape = RoundedCornerShape(10.dp)
-            )
-    )
 }

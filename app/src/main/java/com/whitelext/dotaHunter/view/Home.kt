@@ -28,7 +28,10 @@ fun Home() {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
-            if (currentRoute(navController = navController) != Screen.ProfileDetail.route) BottomNavigationBar(
+            val currentRoute = currentRoute(navController = navController)
+            if (currentRoute != Screen.ProfileDetail.route &&
+                currentRoute != Screen.MatchDetail.route
+            ) BottomNavigationBar(
                 controller = navController,
                 onNavigationSelected = { screen ->
                     navController.navigate(screen.route) {
@@ -49,7 +52,7 @@ fun Home() {
             )
         }
     ) {
-        //Navigation(navController = navController, modifier = Modifier.padding(innerPadding))
+        // Navigation(navController = navController, modifier = Modifier.padding(innerPadding))
         Navigation(navController = navController, modifier = Modifier)
     }
 }
@@ -70,12 +73,18 @@ fun Navigation(navController: NavHostController, modifier: Modifier) {
             arguments = listOf(navArgument(Constants.PROFILE_ID) { type = NavType.LongType })
         ) {
             val profileId = it.arguments?.getLong(Constants.PROFILE_ID) ?: 0L
-            ProfileScreen(profileId = profileId)
+            ProfileScreen(profileId = profileId, navController = navController)
         }
 
+        composable(
+            route = Screen.MatchDetail.route,
+            arguments = listOf(navArgument(Constants.MATCH_ID) { type = NavType.LongType })
+        ) {
+            val matchId = it.arguments?.getLong(Constants.MATCH_ID) ?: 0L
+            MatchScreen(matchId = matchId)
+        }
     }
 }
-
 
 @Composable
 fun BottomNavigationBar(

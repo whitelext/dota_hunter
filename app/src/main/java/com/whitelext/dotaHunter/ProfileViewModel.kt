@@ -1,7 +1,9 @@
 package com.whitelext.dotaHunter
 
+import android.app.Application
+import android.widget.Toast
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.UserProfileQuery
 import com.whitelext.dotaHunter.common.Resource
@@ -11,20 +13,21 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(private val profileRepository: ProfileRepository) :
-    ViewModel() {
+class ProfileViewModel @Inject constructor(
+    private val profileRepository: ProfileRepository,
+    application: Application
+) :
+    AndroidViewModel(application) {
 
-    private var userId = 0L
     val profileData by lazy { MutableLiveData<UserProfileQuery.Player>() }
 
-    private suspend fun performGetProfile() {
-
+    private suspend fun performGetProfile(userId: Long) {
         when (val response = profileRepository.getProfile(userId)) {
             is Resource.Success -> {
                 profileData.value = response.data
             }
             is Resource.Error -> {
-                // TODO: ui notification
+                Toast.makeText(getApplication(), response.error.message, Toast.LENGTH_SHORT).show()
             }
             else -> {
                 // TODO: same ui notification
@@ -33,9 +36,6 @@ class ProfileViewModel @Inject constructor(private val profileRepository: Profil
     }
 
     fun initUser(userId: Long) {
-        if (userId != 0L) {
-            this.userId = userId
-            viewModelScope.launch { performGetProfile() }
-        }
+        viewModelScope.launch { performGetProfile(userId) }
     }
 }

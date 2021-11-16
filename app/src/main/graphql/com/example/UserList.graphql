@@ -2,10 +2,17 @@ query UserList($username: String! = "whitelext") {
     stratz {
         search(request: {
             query : $username
-            searchType : [PLAYERS]
+            searchType : [PLAYERS, PRO_PLAYERS]
             take : 50
         }) {
             players {
+                id
+                avatar
+                name
+                seasonRank
+                lastMatchDateTime
+            }
+            proPlayers{
                 id
                 avatar
                 name
