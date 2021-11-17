@@ -5,7 +5,7 @@
 ## Команда 
 
 - [Алексей Чемякин](https://github.com/whitelext)
-= [Андрей Белицкий](https://github.com/SirDratuti)
+- [Андрей Белицкий](https://github.com/SirDratuti)
 - [Иван Шкикавый](https://github.com/busybeecoder)
 - [Кирилл Орлов](https://github.com/Orlodox)
 
