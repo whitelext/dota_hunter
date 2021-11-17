@@ -1,9 +1,8 @@
 package com.whitelext.dotaHunter
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import android.widget.Toast
+import androidx.lifecycle.*
 import com.example.UserListQuery
 import com.whitelext.dotaHunter.common.Resource
 import com.whitelext.dotaHunter.domain.repository.SearchRepository
@@ -12,26 +11,26 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(private val searchRepository: SearchRepository) :
-    ViewModel() {
+class SearchViewModel @Inject constructor(
+    private val searchRepository: SearchRepository,
+    application: Application
+) : AndroidViewModel(application) {
 
     private var searchQuery = ""
     private val _usersLiveData by lazy { MutableLiveData<List<UserListQuery.Player>>() }
     val usersLiveData: LiveData<List<UserListQuery.Player>> = _usersLiveData
 
     fun onQueryChanged(newQuery: String) {
-        if (searchQuery != newQuery) {
-            searchQuery = newQuery
-            if (searchQuery.isEmpty()) {
-                // TODO: put favourites users in usersLiveData
-                _usersLiveData.value = emptyList()
-                return
-            }
-            Utils.asyncCall(
-                coroutineScope = viewModelScope,
-                destinationFunction = ::performSearchUsers
-            ).invoke()
+        searchQuery = newQuery
+        if (searchQuery.isEmpty()) {
+            // TODO: put favourites users in usersLiveData
+            _usersLiveData.value = emptyList()
+            return
         }
+        Utils.asyncCall(
+            coroutineScope = viewModelScope,
+            destinationFunction = ::performSearchUsers
+        ).invoke()
     }
 
     private suspend fun performSearchUsers() {
@@ -44,10 +43,11 @@ class SearchViewModel @Inject constructor(private val searchRepository: SearchRe
                     }
             }
             is Resource.Error -> {
-                // TODO: ui notification
+                Toast.makeText(getApplication(), response.error.message, Toast.LENGTH_SHORT).show()
             }
             else -> {
                 // TODO: same ui notification
+                Toast.makeText(getApplication(), "Something went wrong", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -1,0 +1,43 @@
+query MatchStats($match_id: Long! = 3948266497){
+    match(id: $match_id){
+        id
+        durationSeconds
+        didRadiantWin
+        players{
+            steamAccount{
+                id
+                name
+            }
+            hero{
+                shortName
+                talents{
+                    abilityId
+                    slot
+                }
+            }
+            level
+            isVictory
+            isRadiant
+            kills
+            deaths
+            assists
+            item0Id
+            item1Id
+            item2Id
+            item3Id
+            item4Id
+            item5Id
+            backpack0Id
+            backpack1Id
+            backpack2Id
+            networth
+            goldPerMinute
+            experiencePerMinute
+            stats{
+                heroDamageCount
+                healCount
+                towerDamageCount
+            }
+        }
+    }
+}

@@ -23,11 +23,13 @@ class GetProfileApi @Inject constructor(private val apolloClient: ApolloClient) 
         return if (player != null && !response.hasErrors()) {
             Resource.Success(player)
         } else {
-            Resource.Error(response?.errors?.let {
-                ResourceError.API_ERROR.apply {
-                    message = it.first().message
-                }
-            } ?: ResourceError.UNKNOWN)
+            Resource.Error(
+                response?.errors?.let {
+                    ResourceError.API_ERROR.apply {
+                        message = it.first().message
+                    }
+                } ?: ResourceError.UNKNOWN
+            )
         }
     }
 }

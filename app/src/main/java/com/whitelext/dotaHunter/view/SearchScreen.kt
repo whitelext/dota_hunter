@@ -77,7 +77,7 @@ fun SearchScreen(
                     value = userInput,
                     onValueChange = { newValue ->
                         userInput = newValue
-                        viewModel.onQueryChanged(userInput)
+//                        viewModel.onQueryChanged(userInput)
                     },
                     Modifier
                         .padding(start = 15.dp)

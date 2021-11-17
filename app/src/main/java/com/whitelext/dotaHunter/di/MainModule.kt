@@ -2,10 +2,6 @@ package com.whitelext.dotaHunter.di
 
 import android.content.Context
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.api.Operation
-import com.apollographql.apollo.api.ResponseField
-import com.apollographql.apollo.cache.normalized.CacheKey
-import com.apollographql.apollo.cache.normalized.CacheKeyResolver
 import com.apollographql.apollo.cache.normalized.lru.EvictionPolicy
 import com.apollographql.apollo.cache.normalized.lru.LruNormalizedCacheFactory
 import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory
@@ -37,6 +33,11 @@ object MainModule {
     }
 
     @Provides
+    fun provideMatchRepository(repositoryImpl: MatchRepositoryImpl): MatchRepository {
+        return repositoryImpl
+    }
+
+    @Provides
     fun provideNormalizedCache(): LruNormalizedCacheFactory {
         return LruNormalizedCacheFactory(
             EvictionPolicy.builder().maxSizeBytes(10 * 1024 * 1024L).build()
@@ -59,5 +60,4 @@ object MainModule {
             .serverUrl("https://api.stratz.com/graphql")
             .build()
     }
-
 }
