@@ -193,6 +193,7 @@ private fun ShowPlayer(player: MatchStatsQuery.Player) {
                     text = it,
                     modifier = Modifier
                         .fillMaxWidth(fraction = Constants.HALF)
+                        .weight(1f)
                         .align(Alignment.CenterVertically),
 
                     color = Color.Black,
@@ -210,31 +211,46 @@ private fun ShowPlayer(player: MatchStatsQuery.Player) {
                     player.backpack2Id,
                 )
                     // .map { itemId -> if (itemId == null) -1 else (itemId as BigDecimal).toShort() })
-                    .map { itemId -> (itemId as BigDecimal?)?.toShort() ?: -1 }
+                    .map { itemId -> (itemId as BigDecimal?)?.toShort() ?: -1 },
+                modifier = Modifier.fillMaxWidth(fraction = Constants.HALF)
             )
         }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 5.dp),
+                .padding(horizontal = 5.dp, vertical = 5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(fraction = 0.33f)
-                    .weight(1f)
-            ) {
-                TextLabelRounded(
-                    text = "Level: ${player.level}",
-                    backgroundColor = PurePinkBackground,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                TextLabelWithPictureRounded(
-                    picture = MONEY_PICTURE,
-                    backgroundColor = PurePinkBackground,
-                    text = "${player.networth}",
-                    modifier = Modifier.fillMaxWidth()
-                )
+            if (player.networth != null) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(fraction = 0.33f)
+                        .weight(1f)
+                ) {
+                    TextLabelRounded(
+                        text = "Level: ${player.level}",
+                        backgroundColor = PurePinkBackground,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    TextLabelWithPictureRounded(
+                        picture = MONEY_PICTURE,
+                        backgroundColor = PurePinkBackground,
+                        text = "${player.networth}",
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(fraction = 0.33f)
+                        .weight(1f)
+                ) {
+                    TextLabelRounded(
+                        text = "Level: ${player.level}",
+                        backgroundColor = PurePinkBackground,
+                        modifier = Modifier.fillMaxWidth().fillMaxHeight()
+                    )
+                }
             }
             Column(
                 modifier = Modifier
@@ -267,42 +283,45 @@ private fun ShowPlayer(player: MatchStatsQuery.Player) {
                 )
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 5.dp)
-                .padding(vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextLabelWithPictureRounded(
-                picture = SWORD,
-                text = "${player.stats?.heroDamageCount}",
-                backgroundColor = PurePinkBackground,
+        if (player.stats?.healCount != null && player.stats.heroDamageCount != null && player.stats.towerDamageCount != null) {
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth(fraction = 0.33f)
-                    .weight(1f)
-            )
-            TextLabelWithPictureRounded(
-                picture = HEAL,
-                text = "${player.stats?.healCount}",
-                backgroundColor = PurePinkBackground,
-                modifier = Modifier
-                    .fillMaxWidth(fraction = 0.33f)
-                    .weight(1f)
-            )
-            TextLabelWithPictureRounded(
-                picture = TOWER,
-                text = "${player.stats?.towerDamageCount}",
-                backgroundColor = PurePinkBackground,
-                modifier = Modifier
-                    .fillMaxWidth(fraction = 0.33f)
-                    .weight(1f)
-            )
+                    .fillMaxWidth()
+                    .padding(horizontal = 5.dp)
+                    .padding(vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TextLabelWithPictureRounded(
+                    picture = SWORD,
+                    text = "${player.stats.heroDamageCount}",
+                    backgroundColor = PurePinkBackground,
+                    modifier = Modifier
+                        .fillMaxWidth(fraction = 0.33f)
+                        .weight(1f)
+                )
+                TextLabelWithPictureRounded(
+                    picture = HEAL,
+                    text = "${player.stats.healCount}",
+                    backgroundColor = PurePinkBackground,
+                    modifier = Modifier
+                        .fillMaxWidth(fraction = 0.33f)
+                        .weight(1f)
+                )
+                TextLabelWithPictureRounded(
+                    picture = TOWER,
+                    text = "${player.stats.towerDamageCount}",
+                    backgroundColor = PurePinkBackground,
+                    modifier = Modifier
+                        .fillMaxWidth(fraction = 0.33f)
+                        .weight(1f)
+                )
+            }
         }
     }
 }
+
 @Composable
-private fun BackpackItemGrid(items: List<Short>) {
+private fun BackpackItemGrid(items: List<Short>, modifier: Modifier) {
     Column {
         Row {
             for (i in 0..2) {

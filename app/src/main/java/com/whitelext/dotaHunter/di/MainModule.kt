@@ -12,6 +12,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -58,6 +59,10 @@ object MainModule {
             .normalizedCache(sqlNormalizedCache)
             .defaultResponseFetcher(ApolloResponseFetchers.CACHE_AND_NETWORK)
             .serverUrl("https://api.stratz.com/graphql")
+            .okHttpClient(
+                OkHttpClient.Builder()
+                    .addInterceptor(AuthorizationInterceptor()).build()
+            )
             .build()
     }
 }

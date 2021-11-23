@@ -16,8 +16,7 @@ import javax.inject.Inject
 class MatchViewModel @Inject constructor(
     private val matchRepository: MatchRepository,
     application: Application
-) :
-    AndroidViewModel(application) {
+) : AndroidViewModel(application) {
 
     val matchData by lazy { MutableLiveData<MatchStatsQuery.Match>() }
 

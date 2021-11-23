@@ -37,8 +37,12 @@ object Utils {
     }
 
     fun getItemUrl(itemName: String) = buildString {
-        append("https://cdn.stratz.com/images/dota2/items/")
-        append("$itemName.png")
+        if (itemName.contains("recipe")) {
+            append("https://cdn.stratz.com/images/dota2/items/recipe.png")
+        } else {
+            append("https://cdn.stratz.com/images/dota2/items/")
+            append("$itemName.png")
+        }
     }
 
     fun getRankUrl(value: Int?) = buildString {
