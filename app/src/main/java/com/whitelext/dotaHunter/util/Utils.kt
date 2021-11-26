@@ -45,6 +45,10 @@ object Utils {
         }
     }
 
+    fun getLockUrl() = buildString {
+        append("https://cdn-icons-png.flaticon.com/512/59/59172.png")
+    }
+
     fun getRankUrl(value: Int?) = buildString {
         if (value != null) {
             append("https://cdn.stratz.com/images/dota2/seasonal_rank/medal_${value / 10}.png")

@@ -17,8 +17,13 @@ class SearchViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
 
     private var searchQuery = ""
+    val userInput by lazy { MutableLiveData("") }
     private val _usersLiveData by lazy { MutableLiveData<List<UserListQuery.Player>>() }
     val usersLiveData: LiveData<List<UserListQuery.Player>> = _usersLiveData
+
+    fun clearInput() {
+        userInput.value = ""
+    }
 
     fun onQueryChanged(newQuery: String) {
         searchQuery = newQuery

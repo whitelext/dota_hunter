@@ -15,6 +15,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -47,9 +48,7 @@ fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
     navController: NavController
 ) {
-    var userInput by remember {
-        mutableStateOf("")
-    }
+    val userInput by viewModel.userInput.observeAsState()
     val userList by viewModel.usersLiveData.observeAsState()
 
     Column(
@@ -72,16 +71,17 @@ fun SearchScreen(
             Box(
                 modifier = Modifier
                     .padding(vertical = 5.dp)
+                    .weight(16f)
             ) {
                 BasicTextField(
-                    value = userInput,
+                    value = userInput ?: "",
                     onValueChange = { newValue ->
-                        userInput = newValue
+                        viewModel.userInput.value = newValue
 //                        viewModel.onQueryChanged(userInput)
                     },
-                    Modifier
+                    modifier = Modifier
                         .padding(start = 15.dp)
-                        .fillMaxWidth(0.8f),
+                        .fillMaxWidth(),
                     maxLines = 1,
                     cursorBrush = SolidColor(MaterialTheme.colors.primary),
                     singleLine = true,
@@ -92,22 +92,44 @@ fun SearchScreen(
                         imeAction = ImeAction.Search
                     ),
                     keyboardActions = KeyboardActions(
-                        onDone = {
-                            viewModel.onQueryChanged(userInput)
+                        onSearch = {
+                            viewModel.onQueryChanged(userInput ?: "")
                         }
                     )
                 )
             }
             Box(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.weight(2f),
                 contentAlignment = Alignment.CenterEnd
             ) {
                 IconButton(
                     onClick = {
-                        viewModel.onQueryChanged(userInput)
+                        viewModel.clearInput()
                     },
                     modifier = Modifier
                         .padding(4.dp)
+                        .fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Clear,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.onSurface,
+                        modifier = Modifier
+                            .padding(5.dp)
+                    )
+                }
+            }
+            Box(
+                modifier = Modifier.weight(2f),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                IconButton(
+                    onClick = {
+                        viewModel.onQueryChanged(userInput ?: "")
+                    },
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .fillMaxWidth()
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Search,
@@ -119,24 +141,35 @@ fun SearchScreen(
                 }
             }
         }
-        ShowResult(userList ?: listOf(), navController)
+        ShowResult(userList ?: listOf(), navController, viewModel)
     }
 }
 
 @Composable
 private fun ShowResult(
     userList: List<UserListQuery.Player>,
-    navController: NavController
+    navController: NavController,
+    viewModel: SearchViewModel
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .background(color = BackgroundDark)
-            .fillMaxHeight()
-    ) {
-        items(userList.size) { userIndex ->
-            ShowPlayer(player = userList[userIndex], onClick = {
-                navController.navigate(Screen.ProfileDetail.createRoute((userList[userIndex].id as BigDecimal).toLong()))
-            })
+    if (viewModel.userInput.value == "") {
+        LazyColumn(
+            modifier = Modifier
+                .background(color = BackgroundDark)
+                .fillMaxHeight()
+        ) {
+            // TODO display favourites
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier
+                .background(color = BackgroundDark)
+                .fillMaxHeight()
+        ) {
+            items(userList.size) { userIndex ->
+                ShowPlayer(player = userList[userIndex], onClick = {
+                    navController.navigate(Screen.ProfileDetail.createRoute((userList[userIndex].id as BigDecimal).toLong()))
+                })
+            }
         }
     }
 }

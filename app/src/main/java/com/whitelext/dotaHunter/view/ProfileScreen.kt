@@ -138,15 +138,36 @@ private fun Matches(
     matches: List<UserProfileQuery.Match>,
     navController: NavController
 ) {
-    LazyColumn {
-        items(matches.size) { i ->
-            ShowMatch(
-                match = matches[i],
-                onClick = {
-                    navController.navigate(Screen.MatchDetail.createRoute((matches[i].id as BigDecimal).toLong()))
-                }
-            )
+    if (matches.isEmpty()) {
+        DrawLock()
+    } else {
+        LazyColumn {
+            items(matches.size) { i ->
+                ShowMatch(
+                    match = matches[i],
+                    onClick = {
+                        navController.navigate(Screen.MatchDetail.createRoute((matches[i].id as BigDecimal).toLong()))
+                    }
+                )
+            }
         }
+    }
+}
+
+@Composable
+fun DrawLock() {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = rememberImagePainter(Utils.getLockUrl()),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .padding()
+                .padding(end = 2.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .fillMaxWidth(fraction = THIRTYTHIRD)
+                .align(alignment = Alignment.Center)
+        )
     }
 }
 
