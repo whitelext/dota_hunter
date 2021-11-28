@@ -169,8 +169,10 @@ private fun Players(
                 .padding(8.dp)
                 .clip(shape = RoundedCornerShape(10.dp))
                 .fillMaxWidth()
-                .background(color = if (player.isRadiant == true) Radiant else Dire)
-                .clickable { onClick() }
+                .background(
+                    color = if (player.steamAccount == null) DeletedAccount else if (player.isRadiant == true) Radiant else Dire
+                )
+                .clickable { if (player.steamAccount != null) onClick() }
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceAround,
@@ -203,7 +205,7 @@ private fun Players(
                         player.item5Id
                     )
                         // .map { itemId -> if (itemId == null) -1 else (itemId as BigDecimal).toShort() })
-                        .map { itemId -> (itemId as BigDecimal?)?.toShort() ?: -1 }
+                        .map { itemId -> (itemId as BigDecimal?)?.toShort() ?: -1 },
                 )
             }
 
@@ -213,21 +215,19 @@ private fun Players(
                     .padding(horizontal = 5.dp)
                     .padding(vertical = 3.dp)
             ) {
-                player.steamAccount?.name?.let {
-                    Text(
-                        text = it,
-                        modifier = Modifier
-                            .fillMaxWidth(fraction = Constants.HALF)
-                            .weight(1f)
-                            .align(Alignment.CenterVertically),
+                Text(
+                    text = player.steamAccount?.name ?: "Deleted account",
+                    modifier = Modifier
+                        .fillMaxWidth(fraction = Constants.HALF)
+                        .weight(1f)
+                        .align(Alignment.CenterVertically),
 
-                        color = Color.Black,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontFamily = poppinsFamily,
-                        fontSize = 23.sp,
-                        textAlign = TextAlign.Center
-                    )
-                }
+                    color = Color.Black,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontFamily = poppinsFamily,
+                    fontSize = 23.sp,
+                    textAlign = TextAlign.Center
+                )
 
                 BackpackItemGrid(
                     items = listOf(
@@ -246,36 +246,22 @@ private fun Players(
                     .padding(horizontal = 5.dp, vertical = 5.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (player.networth != null) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth(fraction = 0.33f)
-                            .weight(1f)
-                    ) {
-                        TextLabelRounded(
-                            text = "Level: ${player.level}",
-                            backgroundColor = PurePinkBackground,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(fraction = 0.33f)
+                        .weight(1f)
+                ) {
+                    TextLabelRounded(
+                        text = "Level: ${player.level}",
+                        backgroundColor = PurePinkBackground,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    if (player.networth != null) {
                         TextLabelWithPictureRounded(
                             picture = MONEY_PICTURE,
                             backgroundColor = PurePinkBackground,
                             text = "${player.networth}",
                             modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                } else {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth(fraction = 0.33f)
-                            .weight(1f)
-                    ) {
-                        TextLabelRounded(
-                            text = "Level: ${player.level}",
-                            backgroundColor = PurePinkBackground,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight()
                         )
                     }
                 }
@@ -310,7 +296,9 @@ private fun Players(
                     )
                 }
             }
-            if (player.stats?.healCount != null && player.stats.heroDamageCount != null && player.stats.towerDamageCount != null) {
+            if (player.stats?.healCount != null && player.stats.heroDamageCount != null &&
+                player.stats.towerDamageCount != null
+            ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

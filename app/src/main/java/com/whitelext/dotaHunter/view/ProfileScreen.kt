@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -82,51 +83,88 @@ private fun UserCard(
         Column(
             verticalArrangement = Arrangement.Center
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .padding(end = 4.dp)
-                    .horizontalScroll(state = rememberScrollState(0))
-            ) {
-                Rank(index = player.steamAccount?.seasonRank.toString().toIntOrNull())
-                Text(
-                    text = player.steamAccount?.name ?: stringResource(R.string.loading_text),
-                    Modifier
-                        .padding(vertical = 5.dp)
-                        .fillMaxWidth(0.9f),
-                    fontFamily = poppinsFamily,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp
-                )
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                TextLabelRounded(
-                    text = stringResource(
-                        R.string.game_count,
-                        player.matchCount ?: 0,
-                    ),
-                    modifier = Modifier.weight(1f)
-                )
-                TextLabelRounded(
-                    text = Utils.getWinRate(player),
-                    modifier = Modifier.weight(1f)
-                )
-                IconButton(
-                    onClick = { onAddToFavoritesClickListener((player.steamAccount?.id as BigDecimal).toLong()) },
+            if (player.matchCount == null || player.winCount == null) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .padding(end = 10.dp)
-                        .size(75.dp)
-                        .weight(1f)
+                        .padding(end = 4.dp)
                 ) {
-                    Icon(
-                        // if (player in favorites) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder
-                        imageVector = Icons.Rounded.FavoriteBorder,
-                        contentDescription = stringResource(R.string.add_to_favorites_label),
-                        tint = MaterialTheme.colors.onSurface,
+                    Rank(index = player.steamAccount?.seasonRank.toString().toIntOrNull())
+                    Text(
+                        text = player.steamAccount?.name ?: stringResource(R.string.loading_text),
+                        Modifier
+                            .padding(vertical = 5.dp)
+                            .fillMaxWidth(0.75f)
+                            .horizontalScroll(state = rememberScrollState(0)),
+                        fontFamily = poppinsFamily,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        fontSize = 22.sp
+                    )
+                    IconButton(
+                        onClick = { onAddToFavoritesClickListener((player.steamAccount?.id as BigDecimal).toLong()) },
+                        modifier = Modifier
+                            .size(75.dp)
+                            .weight(1f)
+
+                    ) {
+                        Icon(
+                            // if (player in favorites) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder
+                            imageVector = Icons.Rounded.FavoriteBorder,
+                            contentDescription = stringResource(R.string.add_to_favorites_label),
+                            tint = MaterialTheme.colors.onSurface,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+            } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(end = 4.dp)
+                        .horizontalScroll(state = rememberScrollState(0))
+                ) {
+                    Rank(index = player.steamAccount?.seasonRank.toString().toIntOrNull())
+                    Text(
+                        text = player.steamAccount?.name ?: stringResource(R.string.loading_text),
+                        Modifier
+                            .padding(vertical = 5.dp)
+                            .fillMaxWidth(0.9f),
+                        fontFamily = poppinsFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextLabelRounded(
+                        text = stringResource(
+                            R.string.game_count,
+                            player.matchCount ?: 0,
+                        ),
                         modifier = Modifier.weight(1f)
                     )
+                    TextLabelRounded(
+                        text = Utils.getWinRate(player),
+                        modifier = Modifier.weight(1f)
+                    )
+                    IconButton(
+                        onClick = { onAddToFavoritesClickListener((player.steamAccount?.id as BigDecimal).toLong()) },
+                        modifier = Modifier
+                            .padding(end = 10.dp)
+                            .size(75.dp)
+                            .weight(1f)
+                    ) {
+                        Icon(
+                            // if (player in favorites) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder
+                            imageVector = Icons.Rounded.FavoriteBorder,
+                            contentDescription = stringResource(R.string.add_to_favorites_label),
+                            tint = MaterialTheme.colors.onSurface,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
             }
         }
