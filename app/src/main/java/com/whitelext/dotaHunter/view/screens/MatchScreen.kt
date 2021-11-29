@@ -1,4 +1,4 @@
-package com.whitelext.dotaHunter.view
+package com.whitelext.dotaHunter.view.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -181,8 +181,14 @@ private fun Players(
                     .padding(vertical = 6.dp)
                     .padding(horizontal = 5.dp)
             ) {
+                val painter = rememberImagePainter(
+                    data = Utils.getHeroUrl(player.hero?.shortName),
+                    builder = {
+                        crossfade(500)
+                    }
+                )
                 Image(
-                    painter = rememberImagePainter(Utils.getHeroUrl(player.hero?.shortName)),
+                    painter = painter,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

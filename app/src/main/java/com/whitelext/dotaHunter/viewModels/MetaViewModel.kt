@@ -1,15 +1,19 @@
 package com.whitelext.dotaHunter.viewModels
 
 import android.app.Application
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.whitelext.dotaHunter.common.Resource
 import com.whitelext.dotaHunter.domain.repository.MetaRepository
+import com.whitelext.dotaHunter.util.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.math.BigDecimal
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,7 +49,7 @@ class MetaViewModel @Inject constructor(
     var sortingState = PICK_RATE_BY_DESCENDING
 
     // id -> (shortName, displayName)
-    private val _heroMap = mutableMapOf<String, HeroNames>()
+    private val _heroMap = ConcurrentHashMap<String, HeroNames>()
     val heroMap
         get() = _heroMap.toMap()
 
@@ -54,14 +58,16 @@ class MetaViewModel @Inject constructor(
 
     var picksSum = 0L
 
-    fun sortMeta() {
-        metaList.value = when (sortingState) {
-            PICK_RATE_BY_DESCENDING -> _metaList.value?.sortedWith(pickRateDescendingComparator)
-            PICK_RATE_BY_ASCENDING -> _metaList.value?.sortedWith(pickRateAscendingComparator)
-            WIN_RATE_BY_DESCENDING -> _metaList.value?.sortedWith(winRateDescendingComparator)
-            WIN_RATE_BY_ASCENDING -> _metaList.value?.sortedWith(winRateAscendingComparator)
-            else -> _metaList.value ?: listOf()
-        }
+    private fun sortMeta() {
+        metaList.postValue(
+            when (sortingState) {
+                PICK_RATE_BY_DESCENDING -> _metaList.value?.sortedWith(pickRateDescendingComparator)
+                PICK_RATE_BY_ASCENDING -> _metaList.value?.sortedWith(pickRateAscendingComparator)
+                WIN_RATE_BY_DESCENDING -> _metaList.value?.sortedWith(winRateDescendingComparator)
+                WIN_RATE_BY_ASCENDING -> _metaList.value?.sortedWith(winRateAscendingComparator)
+                else -> _metaList.value ?: listOf()
+            }
+        )
     }
 
     fun changeState(changeFlag: Long) {
@@ -78,37 +84,41 @@ class MetaViewModel @Inject constructor(
     }
 
     private fun getMeta() {
-        viewModelScope.launch { performGetMeta() }
+        Utils.asyncCall(
+            coroutineScope = viewModelScope,
+            destinationFunction = ::performGetMeta
+        ).invoke()
     }
 
     private suspend fun performGetMeta() {
         when (val response = metaRepository.getMeta()) {
             is Resource.Success -> {
-                response.data.constants?.heroes?.forEach { hero ->
-                    _heroMap[hero?.id.toString()] =
-                        HeroNames(
-                            hero?.shortName ?: "",
-                            hero?.displayName ?: ""
-                        )
-                }
-
-                val tempList = mutableListOf<HeroInfo>()
-                response.data.heroStats?.metaTrend?.forEach { hero ->
-                    hero?.heroId?.let { id ->
-                        val heroPicks = hero.pick?.sumOf { (it as BigDecimal).toLong() } ?: 0L
-                        val heroWins = hero.win?.sumOf { (it as BigDecimal).toLong() } ?: 0L
-                        picksSum += heroPicks
-                        tempList.add(
-                            HeroInfo(
-                                id = id,
-                                picks = heroPicks,
-                                wins = heroWins
+                withContext(Dispatchers.Default) {
+                    response.data.constants?.heroes?.forEach { hero ->
+                        _heroMap[hero?.id.toString()] =
+                            HeroNames(
+                                hero?.shortName ?: "",
+                                hero?.displayName ?: ""
                             )
-                        )
                     }
-                }
 
-                _metaList.value = tempList
+                    val tempList = mutableListOf<HeroInfo>()
+                    response.data.heroStats?.metaTrend?.forEach { hero ->
+                        hero?.heroId?.let { id ->
+                            val heroPicks = hero.pick?.sumOf { (it as BigDecimal).toLong() } ?: 0L
+                            val heroWins = hero.win?.sumOf { (it as BigDecimal).toLong() } ?: 0L
+                            picksSum += heroPicks
+                            tempList.add(
+                                HeroInfo(
+                                    id = id,
+                                    picks = heroPicks,
+                                    wins = heroWins
+                                )
+                            )
+                        }
+                    }
+                    _metaList.postValue(tempList)
+                }
                 sortMeta()
             }
             is Resource.Error -> {

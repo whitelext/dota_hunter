@@ -37,7 +37,7 @@ class ItemsViewModel @Inject constructor(
     private suspend fun performGetItems() {
         when (val response = itemsRepository.getItems()) {
             is Resource.Success -> {
-                _itemsLiveData.value = response.data
+                _itemsLiveData.postValue(response.data)
             }
             is Resource.Error -> {
                 Toast.makeText(getApplication(), response.error.message, Toast.LENGTH_SHORT).show()

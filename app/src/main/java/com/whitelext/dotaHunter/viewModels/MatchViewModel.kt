@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.MatchStatsQuery
 import com.whitelext.dotaHunter.common.Resource
 import com.whitelext.dotaHunter.domain.repository.MatchRepository
+import com.whitelext.dotaHunter.util.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,7 +23,7 @@ class MatchViewModel @Inject constructor(
     private suspend fun performGetMatch(matchId: Long) {
         when (val response = matchRepository.getMatch(matchId)) {
             is Resource.Success -> {
-                matchData.value = response.data
+                matchData.postValue(response.data)
             }
             is Resource.Error -> {
                 Toast.makeText(getApplication(), response.error.message, Toast.LENGTH_SHORT).show()
@@ -35,6 +35,10 @@ class MatchViewModel @Inject constructor(
     }
 
     fun initMatch(matchId: Long) {
-        viewModelScope.launch { performGetMatch(matchId) }
+        Utils.asyncCall(
+            coroutineScope = viewModelScope,
+            destinationFunction = ::performGetMatch,
+            argument = matchId
+        ).invoke()
     }
 }

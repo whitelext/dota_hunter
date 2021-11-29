@@ -42,10 +42,11 @@ class SearchViewModel @Inject constructor(
 
         when (val response = searchRepository.searchUsers(searchQuery)) {
             is Resource.Success -> {
-                _usersLiveData.value =
+                _usersLiveData.postValue(
                     response.data.filter { it.lastMatchDateTime != null }.sortedByDescending {
                         it.seasonRank.toString().toLongOrNull()
                     }
+                )
             }
             is Resource.Error -> {
                 Toast.makeText(getApplication(), response.error.message, Toast.LENGTH_SHORT).show()

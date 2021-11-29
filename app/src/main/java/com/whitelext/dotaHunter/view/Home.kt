@@ -20,7 +20,10 @@ import androidx.navigation.navArgument
 import com.whitelext.dotaHunter.ui.theme.BottomNavColor
 import com.whitelext.dotaHunter.util.Constants
 import com.whitelext.dotaHunter.util.Screen
+import com.whitelext.dotaHunter.view.screens.MatchScreen
 import com.whitelext.dotaHunter.view.screens.MetaScreen
+import com.whitelext.dotaHunter.view.screens.ProfileScreen
+import com.whitelext.dotaHunter.view.screens.SearchScreen
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
