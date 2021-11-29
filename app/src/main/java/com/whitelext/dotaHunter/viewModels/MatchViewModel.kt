@@ -1,30 +1,29 @@
-package com.whitelext.dotaHunter
+package com.whitelext.dotaHunter.viewModels
 
 import android.app.Application
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.UserProfileQuery
+import com.example.MatchStatsQuery
 import com.whitelext.dotaHunter.common.Resource
-import com.whitelext.dotaHunter.domain.repository.ProfileRepository
+import com.whitelext.dotaHunter.domain.repository.MatchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(
-    private val profileRepository: ProfileRepository,
+class MatchViewModel @Inject constructor(
+    private val matchRepository: MatchRepository,
     application: Application
-) :
-    AndroidViewModel(application) {
+) : AndroidViewModel(application) {
 
-    val profileData by lazy { MutableLiveData<UserProfileQuery.Player>() }
+    val matchData by lazy { MutableLiveData<MatchStatsQuery.Match>() }
 
-    private suspend fun performGetProfile(userId: Long) {
-        when (val response = profileRepository.getProfile(userId)) {
+    private suspend fun performGetMatch(matchId: Long) {
+        when (val response = matchRepository.getMatch(matchId)) {
             is Resource.Success -> {
-                profileData.value = response.data
+                matchData.value = response.data
             }
             is Resource.Error -> {
                 Toast.makeText(getApplication(), response.error.message, Toast.LENGTH_SHORT).show()
@@ -35,7 +34,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun initUser(userId: Long) {
-        viewModelScope.launch { performGetProfile(userId) }
+    fun initMatch(matchId: Long) {
+        viewModelScope.launch { performGetMatch(matchId) }
     }
 }

@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.UserListQuery
-import com.whitelext.dotaHunter.SearchViewModel
+import com.whitelext.dotaHunter.viewModels.SearchViewModel
 import com.whitelext.dotaHunter.ui.theme.BackgroundDark
 import com.whitelext.dotaHunter.ui.theme.BottomNavColor
 import com.whitelext.dotaHunter.ui.theme.PlayerField

@@ -1,0 +1,17 @@
+query MetaList {
+    constants {
+        heroes {
+            id
+            shortName
+            displayName
+        }
+    }
+
+    heroStats {
+        metaTrend(day : null) {
+            heroId
+            pick
+            win
+        }
+    }
+}

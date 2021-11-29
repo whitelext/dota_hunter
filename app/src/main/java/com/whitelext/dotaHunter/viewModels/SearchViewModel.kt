@@ -1,4 +1,4 @@
-package com.whitelext.dotaHunter
+package com.whitelext.dotaHunter.viewModels
 
 import android.app.Application
 import android.widget.Toast

@@ -26,7 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.UserProfileQuery
-import com.whitelext.dotaHunter.ProfileViewModel
+import com.whitelext.dotaHunter.viewModels.ProfileViewModel
 import com.whitelext.dotaHunter.R
 import com.whitelext.dotaHunter.ui.theme.*
 import com.whitelext.dotaHunter.util.Constants.THIRTYTHIRD
@@ -142,7 +142,7 @@ private fun UserCard(
                     TextLabelRounded(
                         text = stringResource(
                             R.string.game_count,
-                            player.matchCount ?: 0,
+                            player.matchCount,
                         ),
                         modifier = Modifier.weight(1f)
                     )

@@ -25,7 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.MatchStatsQuery
-import com.whitelext.dotaHunter.MatchViewModel
+import com.whitelext.dotaHunter.viewModels.MatchViewModel
 import com.whitelext.dotaHunter.domain.ItemStore
 import com.whitelext.dotaHunter.ui.theme.*
 import com.whitelext.dotaHunter.util.Constants
