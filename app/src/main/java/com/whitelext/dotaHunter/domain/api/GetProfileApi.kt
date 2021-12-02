@@ -15,16 +15,20 @@ class GetProfileApi @Inject constructor(private val apolloClient: ApolloClient) 
         val response = try {
             apolloClient.query(UserProfileQuery(steamAccountIdQuery)).await()
         } catch (e: ApolloException) {
-            null
+            return Resource.Error(
+                ResourceError.API_ERROR.apply {
+                    message = "Server error"
+                }
+            )
         }
 
-        val player = response?.data?.player
+        val player = response.data?.player
 
         return if (player != null && !response.hasErrors()) {
             Resource.Success(player)
         } else {
             Resource.Error(
-                response?.errors?.let {
+                response.errors?.let {
                     ResourceError.API_ERROR.apply {
                         message = it.first().message
                     }

@@ -15,16 +15,20 @@ class GetItemsApi @Inject constructor(private val apolloClient: ApolloClient) {
         val response = try {
             apolloClient.query(ItemsListQuery()).await()
         } catch (e: ApolloException) {
-            null
+            return Resource.Error(
+                ResourceError.API_ERROR.apply {
+                    message = "Server error"
+                }
+            )
         }
 
-        val constants = response?.data?.constants?.items?.filterNotNull()
+        val constants = response.data?.constants?.items?.filterNotNull()
 
         return if (constants != null && !response.hasErrors()) {
             Resource.Success(constants)
         } else {
             Resource.Error(
-                response?.errors?.let {
+                response.errors?.let {
                     ResourceError.API_ERROR.apply {
                         message = it.first().message
                     }

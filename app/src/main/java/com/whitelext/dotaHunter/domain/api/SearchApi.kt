@@ -26,7 +26,11 @@ class SearchApi @Inject constructor(private val apolloClient: ApolloClient) {
         val response = try {
             apolloClient.query(UserListQuery(userNameQuery)).await()
         } catch (e: ApolloException) {
-            null
+            return Resource.Error(
+                ResourceError.API_ERROR.apply {
+                    message = "Server error"
+                }
+            )
         }
 
         val users = response?.data?.stratz?.search?.players?.filterNotNull()?.toMutableList()

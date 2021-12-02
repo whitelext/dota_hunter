@@ -81,7 +81,7 @@ fun Navigation(navController: NavHostController, modifier: Modifier) {
             arguments = listOf(navArgument(Constants.MATCH_ID) { type = NavType.LongType })
         ) {
             val matchId = it.arguments?.getLong(Constants.MATCH_ID) ?: 0L
-            MatchScreen(matchId = matchId)
+            MatchScreen(matchId = matchId, navController = navController)
         }
     }
 }

@@ -15,16 +15,20 @@ class GetMatchApi @Inject constructor(private val apolloClient: ApolloClient) {
         val response = try {
             apolloClient.query(MatchStatsQuery(matchId)).await()
         } catch (e: ApolloException) {
-            null
+            return Resource.Error(
+                ResourceError.API_ERROR.apply {
+                    message = "Server error"
+                }
+            )
         }
 
-        val match = response?.data?.match
+        val match = response.data?.match
 
         return if (match != null && !response.hasErrors()) {
             Resource.Success(match)
         } else {
             Resource.Error(
-                response?.errors?.let {
+                response.errors?.let {
                     ResourceError.API_ERROR.apply {
                         message = it.first().message
                     }
