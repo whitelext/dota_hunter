@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 import kotlin.reflect.KSuspendFunction0
+import kotlin.reflect.KSuspendFunction1
 
 object Utils {
 
@@ -19,9 +20,24 @@ object Utils {
     ): () -> Unit {
         return {
             debounceJob?.cancel()
-            debounceJob = coroutineScope.launch {
+            debounceJob = coroutineScope.launch(Dispatchers.IO) {
                 delay(waitMs)
                 destinationFunction()
+            }
+        }
+    }
+
+    fun asyncCall(
+        waitMs: Long = 0L,
+        coroutineScope: CoroutineScope,
+        destinationFunction: KSuspendFunction1<Long, Unit>,
+        argument: Long
+    ): () -> Unit {
+        return {
+            debounceJob?.cancel()
+            debounceJob = coroutineScope.launch(Dispatchers.IO) {
+                delay(waitMs)
+                destinationFunction(argument)
             }
         }
     }
