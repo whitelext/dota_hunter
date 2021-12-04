@@ -1,4 +1,4 @@
-query MetaList {
+query MetaList($rank : RankBracketHeroTimeDetail) {
     constants {
         heroes {
             id
@@ -8,10 +8,13 @@ query MetaList {
     }
 
     heroStats {
-        metaTrend(day : null) {
+
+        stats(bracketBasicIds: [$rank]){
             heroId
-            pick
-            win
+            events {
+                matchCount
+                wins
+            }
         }
     }
 }

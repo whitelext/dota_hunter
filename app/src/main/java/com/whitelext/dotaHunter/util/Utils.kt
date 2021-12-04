@@ -2,6 +2,7 @@ package com.whitelext.dotaHunter.util
 
 import com.example.MatchStatsQuery
 import com.example.UserProfileQuery
+import com.example.type.RankBracketHeroTimeDetail
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -133,6 +134,17 @@ object Utils {
             }
         }
         return sum
+    }
+
+    fun RankBracketHeroTimeDetail.toArray(): Array<Byte> {
+        return when (this) {
+            RankBracketHeroTimeDetail.ALL -> arrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8)
+            RankBracketHeroTimeDetail.HERALD_GUARDIAN -> arrayOf(1, 2)
+            RankBracketHeroTimeDetail.CRUSADER_ARCHON -> arrayOf(3, 4)
+            RankBracketHeroTimeDetail.LEGEND_ANCIENT -> arrayOf(5, 6)
+            RankBracketHeroTimeDetail.DIVINE_IMMORTAL -> arrayOf(7, 8)
+            else -> arrayOf()
+        }
     }
 
     fun getDireKills(match: MatchStatsQuery.Match): Int {

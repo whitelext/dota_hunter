@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 class MetaRepositoryImpl @Inject constructor(private val api: GetMetaApi) : MetaRepository {
-    override suspend fun getMeta(): Resource<MetaListQuery.Data> {
-        return api.getMeta()
+    override suspend fun getMeta(bracketId: Int): Resource<MetaListQuery.Data> {
+        return api.getMeta(bracketId)
     }
 }
