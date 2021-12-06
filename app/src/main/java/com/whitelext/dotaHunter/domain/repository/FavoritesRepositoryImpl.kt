@@ -11,6 +11,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,36 +21,41 @@ class FavoritesRepositoryImpl @Inject constructor(
     @ApplicationContext val context: Context
 ) : FavoritesRepository {
 
-    override suspend fun getPlayers(): Resource<List<FavoritePlayer>> {
-        Log.d("QWERT", "getPlayers")
-        var players = emptyList<FavoritePlayer>()
+    override suspend fun getPlayers(callback: (Resource<List<FavoritePlayer>>) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
-            players = appDatabase.favoritePlayersDao().getPlayers()
+            val players = appDatabase.favoritePlayersDao().getPlayers()
+            withContext(Dispatchers.Main) {
+                callback.invoke(Resource.Success(players))
+            }
         }
-        return Resource.Success(players)
     }
 
-    override suspend fun addPlayer(player: UserListQuery.Player): Boolean {
-        return try {
+    override suspend fun addPlayer(player: UserListQuery.Player, callback: (Boolean) -> Unit) {
+        try {
             CoroutineScope(Dispatchers.IO).launch {
                 val favoritePlayer = FavoritePlayer.createFromProfile(player)
                 appDatabase.favoritePlayersDao().addPlayer(favoritePlayer)
                 LocalCache.cacheFavoritePlayer(favoritePlayer, context)
+                withContext(Dispatchers.Main) {
+                    callback.invoke(true)
+                }
             }
-            true
         } catch (e: Exception) {
-            false
+            callback.invoke(false)
         }
     }
 
-    override suspend fun deletePlayer(playerId: Long): Boolean {
-        return try {
+    override suspend fun deletePlayer(playerId: Long, callback: (Boolean) -> Unit) {
+        try {
             CoroutineScope(Dispatchers.IO).launch {
                 appDatabase.favoritePlayersDao().deletePlayer(playerId)
+                LocalCache.removeFavoritePlayer(playerId, context)
+                withContext(Dispatchers.Main) {
+                    callback.invoke(true)
+                }
             }
-            true
         } catch (e: Exception) {
-            false
+            callback.invoke(false)
         }
     }
 

@@ -10,7 +10,7 @@ object LocalCache {
             favoritePlayer.id.toString(),
             Utils.getAvatarUrl(favoritePlayer.avatarId),
             FileHelper.Entity.AVATAR,
-            FileHelper.Folder.FAVORITE_PLAYERS,
+            FileHelper.Folder.FAVORITES,
             context
         )
         FileHelper.saveEntity(
@@ -22,8 +22,9 @@ object LocalCache {
         )
     }
 
-    fun removeFavoritePlayer(favoritePlayer: FavoritePlayer) {
-        // TODO: add player id to clear-list and periodically garbage-collecting cache by async service
+    fun removeFavoritePlayer(playerId: Long, context: Context) {
+        // TODO: в идеале через службу, но пока и так сойдёт
+        FileHelper.deleteEntity(playerId.toString(), FileHelper.Entity.AVATAR, FileHelper.Folder.FAVORITES, context)
     }
 
 }

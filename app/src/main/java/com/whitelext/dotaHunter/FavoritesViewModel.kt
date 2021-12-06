@@ -22,22 +22,25 @@ class FavoritesViewModel @Inject constructor(
     val favoriteList by lazy { MutableLiveData<List<FavoritePlayer>>() }
 
     fun initialize() {
-        Log.d("QWERT", "initialize")
         fetchFavorites()
     }
 
     private fun fetchFavorites() {
         viewModelScope.launch {
-            when (val response = favoritesRepository.getPlayers()) {
-                is Resource.Success -> {
-                    favoriteList.value = response.data
-                }
-                is Resource.Error -> {
-                    Toast.makeText(getApplication(), response.error.message, Toast.LENGTH_SHORT).show()
-                }
-                else -> {
-                    Toast.makeText(getApplication(), "Something went wrong", Toast.LENGTH_SHORT).show()
-                }
+            favoritesRepository.getPlayers { onResult(it) }
+        }
+    }
+
+    private fun onResult(result: Resource<List<FavoritePlayer>>) {
+        when (result) {
+            is Resource.Success -> {
+                favoriteList.value = result.data
+            }
+            is Resource.Error -> {
+                Toast.makeText(getApplication(), result.error.message, Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                Toast.makeText(getApplication(), "Something went wrong", Toast.LENGTH_SHORT).show()
             }
         }
     }

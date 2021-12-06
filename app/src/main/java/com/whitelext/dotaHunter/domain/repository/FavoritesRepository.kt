@@ -6,10 +6,10 @@ import com.whitelext.dotaHunter.domain.model.FavoritePlayer
 
 interface FavoritesRepository {
 
-    suspend fun getPlayers(): Resource<List<FavoritePlayer>>
+    suspend fun getPlayers(callback: (Resource<List<FavoritePlayer>>) -> Unit)
 
-    suspend fun addPlayer(player: UserListQuery.Player): Boolean
+    suspend fun addPlayer(player: UserListQuery.Player, callback: (Boolean) -> Unit)
 
-    suspend fun deletePlayer(playerId: Long): Boolean
+    suspend fun deletePlayer(playerId: Long, callback: (Boolean) -> Unit)
 
 }

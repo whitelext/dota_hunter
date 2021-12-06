@@ -8,17 +8,14 @@ import android.util.Log
 import com.whitelext.dotaHunter.util.Utils.getBitmapFromURL
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.*
-import java.net.HttpURLConnection
-import java.net.URL
 
 
 object FileHelper {
 
     enum class Folder(val folderName: String) {
-        FAVORITE_PLAYERS("favorites"),
+        FAVORITES("favorites"),
         RANKS("ranks"),
     }
 
@@ -54,13 +51,36 @@ object FileHelper {
         }
     }
 
-    fun getImageEntity(id: String, entity: Entity, folder: Folder): Bitmap? {
-        return try {
-            val file = File(folder.folderName + getFileNameByEntity(id, entity))
-            BitmapFactory.decodeStream(FileInputStream(file))
+    fun deleteEntity(id: String, entity: Entity, folder: Folder, context: Context) {
+        val dir = File(context.filesDir, folder.folderName)
+        if (!dir.exists()) {
+            return
+        }
+        val file = File(dir, getFileNameByEntity(id, entity))
+        if (!file.exists()) {
+            return
+        }
+        try {
+            file.delete()
+        } catch (e: Exception) {
+            Log.e("deleteEntity: ", e.toString())
+        }
+    }
+
+    fun getImageEntity(id: String, entity: Entity, folder: Folder, context: Context): Bitmap? {
+        try {
+            val imageDir = File(context.filesDir, folder.folderName)
+            if (!imageDir.exists()) {
+                return null
+            }
+            val imageFile = File(imageDir, getFileNameByEntity(id, entity))
+            if (!imageFile.exists()) {
+                return null
+            }
+            return BitmapFactory.decodeStream(FileInputStream(imageFile))
         } catch (e: FileNotFoundException) {
-            Log.e("getEntity: ", e.toString())
-            null
+            Log.e("getImageEntity: ", e.toString())
+            return null
         }
     }
 

@@ -48,7 +48,7 @@ fun ProfileScreen(
 ) {
 
     val player by profileViewModel.profileData.observeAsState()
-    val isFavorite by profileViewModel.isFavorite.observeAsState(false)
+
     profileViewModel.initUser(profileId)
 
     Column(
@@ -58,8 +58,7 @@ fun ProfileScreen(
             .fillMaxHeight()
     ) {
         player?.let { player ->
-            // TODO: implement onAddToFavoritesClickListener
-            UserCard(player = player, isFavorite, onFavoritesClickListener = {
+            UserCard(player = player, profileViewModel, onFavoritesClickListener = {
                 profileViewModel.changeFavorite()
             })
             player.matches?.let { Matches(matches = player.matches.filterNotNull(), navController) }
@@ -71,9 +70,12 @@ fun ProfileScreen(
 @Composable
 private fun UserCard(
     player: UserProfileQuery.Player,
-    isFavorite: Boolean,
+    viewModel: ProfileViewModel,
     onFavoritesClickListener: () -> Unit
 ) {
+
+    val isFavorite by viewModel.isFavorite.observeAsState(false)
+
     Row(
         modifier = Modifier
             .padding(7.dp)

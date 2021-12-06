@@ -28,7 +28,7 @@ object Converter {
         )
     }
 
-    fun anyToId(id: Any?): Long? {
+    fun anyToLong(id: Any?): Long? {
         return id?.let { (it as BigDecimal).toLong() }
     }
 

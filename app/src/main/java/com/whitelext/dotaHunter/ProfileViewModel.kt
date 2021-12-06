@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.UserProfileQuery
 import com.whitelext.dotaHunter.common.Resource
+import com.whitelext.dotaHunter.domain.model.FavoritePlayer
 import com.whitelext.dotaHunter.domain.repository.FavoritesRepository
 import com.whitelext.dotaHunter.domain.repository.ProfileRepository
 import com.whitelext.dotaHunter.util.Converter
@@ -40,9 +41,24 @@ class ProfileViewModel @Inject constructor(
     }
 
     private suspend fun checkIsInFavorites() {
-        when (val favorites = favoritesRepository.getPlayers()) {
-            is Resource.Success -> isFavorite.value = favorites.data.any { it.id == profileData.value?.steamAccount?.id }
+        favoritesRepository.getPlayers { onCheckIsInFavoritesResult(it) }
+    }
+
+    private fun onCheckIsInFavoritesResult(result: Resource<List<FavoritePlayer>>) {
+        when (result) {
+            is Resource.Success -> {
+                val profileId = Converter.anyToLong(profileData.value?.steamAccount?.id)
+                isFavorite.value = result.data.any { it.id == profileId }
+            }
             else -> isFavorite.value = false
+        }
+    }
+
+    private fun onChangeFavoritesResult(success: Boolean) {
+        if (success) {
+            viewModelScope.launch {
+                checkIsInFavorites()
+            }
         }
     }
 
@@ -57,16 +73,13 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             if (isFavorite.value == false) {
                 profileData.value?.steamAccount?.let {
-                    favoritesRepository.addPlayer(Converter.steamAccountToPlayer(it))
-                    //isFavorite.value = true
+                    favoritesRepository.addPlayer(Converter.steamAccountToPlayer(it)) { success -> onChangeFavoritesResult(success) }
                 }
             } else {
-                Converter.anyToId(profileData.value?.steamAccount?.id)?.let {
-                    favoritesRepository.deletePlayer(it)
-                    // isFavorite.value = false
+                Converter.anyToLong(profileData.value?.steamAccount?.id)?.let {
+                    favoritesRepository.deletePlayer(it) { success -> onChangeFavoritesResult(success) }
                 }
             }
-            checkIsInFavorites()
         }
     }
 }
