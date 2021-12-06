@@ -1,4 +1,4 @@
-package com.whitelext.dotaHunter
+package com.whitelext.dotaHunter.viewModels
 
 import android.app.Application
 import android.widget.Toast
@@ -20,8 +20,7 @@ class ProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val favoritesRepository: FavoritesRepository,
     application: Application
-) :
-    AndroidViewModel(application) {
+) : AndroidViewModel(application) {
 
     val profileData by lazy { MutableLiveData<UserProfileQuery.Player>() }
     val isFavorite = MutableLiveData(false)
@@ -29,7 +28,7 @@ class ProfileViewModel @Inject constructor(
     private suspend fun performGetProfile(userId: Long) {
         when (val response = profileRepository.getProfile(userId)) {
             is Resource.Success -> {
-                profileData.value = response.data
+                profileData.postValue(response.data)
             }
             is Resource.Error -> {
                 Toast.makeText(getApplication(), response.error.message, Toast.LENGTH_SHORT).show()

@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.example.MatchStatsQuery
 import com.example.UserProfileQuery
+import com.example.type.RankBracketHeroTimeDetail
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -15,6 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 import kotlin.reflect.KSuspendFunction0
+import kotlin.reflect.KSuspendFunction1
 
 object Utils {
 
@@ -27,9 +29,24 @@ object Utils {
     ): () -> Unit {
         return {
             debounceJob?.cancel()
-            debounceJob = coroutineScope.launch {
+            debounceJob = coroutineScope.launch(Dispatchers.IO) {
                 delay(waitMs)
                 destinationFunction()
+            }
+        }
+    }
+
+    fun asyncCall(
+        waitMs: Long = 0L,
+        coroutineScope: CoroutineScope,
+        destinationFunction: KSuspendFunction1<Long, Unit>,
+        argument: Long
+    ): () -> Unit {
+        return {
+            debounceJob?.cancel()
+            debounceJob = coroutineScope.launch(Dispatchers.IO) {
+                delay(waitMs)
+                destinationFunction(argument)
             }
         }
     }
@@ -125,6 +142,17 @@ object Utils {
             }
         }
         return sum
+    }
+
+    fun RankBracketHeroTimeDetail.toArray(): Array<Byte> {
+        return when (this) {
+            RankBracketHeroTimeDetail.ALL -> arrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8)
+            RankBracketHeroTimeDetail.HERALD_GUARDIAN -> arrayOf(1, 2)
+            RankBracketHeroTimeDetail.CRUSADER_ARCHON -> arrayOf(3, 4)
+            RankBracketHeroTimeDetail.LEGEND_ANCIENT -> arrayOf(5, 6)
+            RankBracketHeroTimeDetail.DIVINE_IMMORTAL -> arrayOf(7, 8)
+            else -> arrayOf()
+        }
     }
 
     fun getDireKills(match: MatchStatsQuery.Match): Int {

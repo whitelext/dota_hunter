@@ -1,4 +1,4 @@
-package com.whitelext.dotaHunter.view
+package com.whitelext.dotaHunter.view.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,9 +20,11 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -31,7 +33,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.UserListQuery
-import com.whitelext.dotaHunter.SearchViewModel
 import com.whitelext.dotaHunter.ui.theme.BackgroundDark
 import com.whitelext.dotaHunter.ui.theme.BottomNavColor
 import com.whitelext.dotaHunter.ui.theme.PlayerField
@@ -41,8 +42,10 @@ import com.whitelext.dotaHunter.util.Utils
 import com.whitelext.dotaHunter.view.CommonComponents.ProfilePhoto
 import com.whitelext.dotaHunter.view.CommonComponents.Rank
 import com.whitelext.dotaHunter.view.CommonComponents.TextLabelRounded
+import com.whitelext.dotaHunter.viewModels.SearchViewModel
 import java.math.BigDecimal
 
+@ExperimentalComposeUiApi
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
@@ -55,7 +58,9 @@ fun SearchScreen(
         Modifier
             .background(BackgroundDark)
             .fillMaxWidth()
+            .padding(bottom = 56.dp)
     ) {
+        val keyboardController = LocalSoftwareKeyboardController.current
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -86,7 +91,10 @@ fun SearchScreen(
                     cursorBrush = SolidColor(MaterialTheme.colors.primary),
                     singleLine = true,
                     textStyle = MaterialTheme.typography.subtitle1
-                        .copy(color = MaterialTheme.colors.onSurface),
+                        .copy(
+                            color = MaterialTheme.colors.onSurface,
+                            fontFamily = poppinsFamily
+                        ),
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.Words,
                         imeAction = ImeAction.Search
@@ -94,6 +102,7 @@ fun SearchScreen(
                     keyboardActions = KeyboardActions(
                         onSearch = {
                             viewModel.onQueryChanged()
+                            keyboardController?.hide()
                         }
                     )
                 )
@@ -126,6 +135,7 @@ fun SearchScreen(
                 IconButton(
                     onClick = {
                         viewModel.onQueryChanged()
+                        keyboardController?.hide()
                     },
                     modifier = Modifier
                         .padding(4.dp)
@@ -141,35 +151,25 @@ fun SearchScreen(
                 }
             }
         }
-        ShowResult(userList, navController, viewModel)
+        ShowResult(userList, navController)
     }
 }
 
 @Composable
 private fun ShowResult(
     userList: List<UserListQuery.Player>,
-    navController: NavController,
-    viewModel: SearchViewModel
+    navController: NavController
 ) {
-    if (viewModel.userInput.value == "") {
-        LazyColumn(
-            modifier = Modifier
-                .background(color = BackgroundDark)
-                .fillMaxHeight()
-        ) {
-            // TODO display favourites
-        }
-    } else {
-        LazyColumn(
-            modifier = Modifier
-                .background(color = BackgroundDark)
-                .fillMaxHeight()
-        ) {
-            items(userList.size) { userIndex ->
-                ShowPlayer(player = userList[userIndex], onClick = {
-                    navController.navigate(Screen.ProfileDetail.createRoute((userList[userIndex].id as BigDecimal).toLong()))
-                })
-            }
+
+    LazyColumn(
+        modifier = Modifier
+            .background(color = BackgroundDark)
+            .fillMaxHeight()
+    ) {
+        items(userList.size) { userIndex ->
+            ShowPlayer(player = userList[userIndex], onClick = {
+                navController.navigate(Screen.ProfileDetail.createRoute((userList[userIndex].id as BigDecimal).toLong()))
+            })
         }
     }
 }

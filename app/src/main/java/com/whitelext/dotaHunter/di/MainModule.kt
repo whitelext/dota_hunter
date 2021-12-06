@@ -46,6 +46,11 @@ object MainModule {
     }
 
     @Provides
+    fun provideMetaRepository(repositoryImpl: MetaRepositoryImpl): MetaRepository {
+        return repositoryImpl
+    }
+
+    @Provides
     fun provideNormalizedCache(): LruNormalizedCacheFactory {
         return LruNormalizedCacheFactory(
             EvictionPolicy.builder().maxSizeBytes(10 * 1024 * 1024L).build()

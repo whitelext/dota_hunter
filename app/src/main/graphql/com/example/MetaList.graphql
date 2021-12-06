@@ -1,0 +1,20 @@
+query MetaList($rank : RankBracketHeroTimeDetail) {
+    constants {
+        heroes {
+            id
+            shortName
+            displayName
+        }
+    }
+
+    heroStats {
+
+        stats(bracketBasicIds: [$rank]){
+            heroId
+            events {
+                matchCount
+                wins
+            }
+        }
+    }
+}

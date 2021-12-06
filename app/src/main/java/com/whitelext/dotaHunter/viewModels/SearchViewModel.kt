@@ -1,4 +1,4 @@
-package com.whitelext.dotaHunter
+package com.whitelext.dotaHunter.viewModels
 
 import android.app.Application
 import android.widget.Toast
@@ -39,10 +39,11 @@ class SearchViewModel @Inject constructor(
 
         when (val response = searchRepository.searchUsers(userInput.value ?: "")) {
             is Resource.Success -> {
-                _usersLiveData.value =
+                _usersLiveData.postValue(
                     response.data.filter { it.lastMatchDateTime != null }.sortedByDescending {
                         it.seasonRank.toString().toLongOrNull()
                     }
+                )
             }
             is Resource.Error -> {
                 Toast.makeText(getApplication(), response.error.message, Toast.LENGTH_SHORT).show()

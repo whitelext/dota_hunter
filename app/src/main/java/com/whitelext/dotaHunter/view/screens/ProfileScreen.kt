@@ -1,4 +1,4 @@
-package com.whitelext.dotaHunter.view
+package com.whitelext.dotaHunter.view.screens
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -27,7 +27,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.UserProfileQuery
-import com.whitelext.dotaHunter.ProfileViewModel
 import com.whitelext.dotaHunter.R
 import com.whitelext.dotaHunter.ui.theme.*
 import com.whitelext.dotaHunter.util.Constants.THIRTYTHIRD
@@ -38,6 +37,7 @@ import com.whitelext.dotaHunter.view.CommonComponents.ItemsGrid
 import com.whitelext.dotaHunter.view.CommonComponents.ProfilePhoto
 import com.whitelext.dotaHunter.view.CommonComponents.Rank
 import com.whitelext.dotaHunter.view.CommonComponents.TextLabelRounded
+import com.whitelext.dotaHunter.viewModels.ProfileViewModel
 import java.math.BigDecimal
 
 @Composable
@@ -79,6 +79,7 @@ private fun UserCard(
     Row(
         modifier = Modifier
             .padding(7.dp)
+            .padding(top = 8.dp)
             .clip(shape = RoundedCornerShape(15.dp))
             .background(color = PlayerField)
             .fillMaxWidth()
@@ -151,7 +152,7 @@ private fun UserCard(
                     TextLabelRounded(
                         text = stringResource(
                             R.string.game_count,
-                            player.matchCount ?: 0,
+                            player.matchCount,
                         ),
                         modifier = Modifier.weight(1f)
                     )
@@ -239,8 +240,14 @@ private fun ShowMatch(
                     .padding(top = 6.dp)
                     .padding(horizontal = 5.dp)
             ) {
+                val painter = rememberImagePainter(
+                    data = Utils.getHeroUrl(it.hero?.shortName),
+                    builder = {
+                        crossfade(500)
+                    }
+                )
                 Image(
-                    painter = rememberImagePainter(Utils.getHeroUrl(it.hero?.shortName)),
+                    painter = painter,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

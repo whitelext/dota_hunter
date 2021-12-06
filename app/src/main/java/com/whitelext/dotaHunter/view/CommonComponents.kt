@@ -31,8 +31,14 @@ object CommonComponents {
 
     @Composable
     fun ProfilePhoto(id: String?) {
+        val painter = rememberImagePainter(
+            data = Utils.getAvatarUrl(id),
+            builder = {
+                crossfade(500)
+            }
+        )
         Image(
-            painter = rememberImagePainter(Utils.getAvatarUrl(id)),
+            painter = painter,
             contentDescription = null,
             modifier = Modifier
                 .padding(15.dp)
@@ -48,13 +54,25 @@ object CommonComponents {
                 .padding(6.dp)
                 .size(60.dp)
         ) {
+            val painterRank = rememberImagePainter(
+                data = Utils.getRankUrl(index),
+                builder = {
+                    crossfade(500)
+                }
+            )
+            val painterStars = rememberImagePainter(
+                data = Utils.getStarsUrl(index),
+                builder = {
+                    crossfade(500)
+                }
+            )
             Image(
-                painter = rememberImagePainter(Utils.getRankUrl(index)),
+                painter = painterRank,
                 contentDescription = null,
                 modifier = Modifier.size(80.dp)
             )
             Image(
-                painter = rememberImagePainter(Utils.getStarsUrl(index)),
+                painter = painterStars,
                 contentDescription = null,
                 modifier = Modifier.size(80.dp)
             )
@@ -94,8 +112,14 @@ object CommonComponents {
         itemName: String,
         colorFilter: ColorFilter?
     ) {
+        val painter = rememberImagePainter(
+            data = itemUrl,
+            builder = {
+                crossfade(500)
+            }
+        )
         Image(
-            painter = rememberImagePainter(itemUrl),
+            painter = painter,
             contentDescription = itemName,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -187,8 +211,14 @@ object CommonComponents {
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val painter = rememberImagePainter(
+                data = picture,
+                builder = {
+                    crossfade(500)
+                }
+            )
             Image(
-                painter = rememberImagePainter(picture),
+                painter = painter,
                 contentDescription = null,
                 modifier = Modifier.size(27.dp)
 

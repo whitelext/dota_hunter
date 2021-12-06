@@ -20,6 +20,10 @@ import androidx.navigation.navArgument
 import com.whitelext.dotaHunter.ui.theme.BottomNavColor
 import com.whitelext.dotaHunter.util.Constants
 import com.whitelext.dotaHunter.util.Screen
+import com.whitelext.dotaHunter.view.screens.MatchScreen
+import com.whitelext.dotaHunter.view.screens.MetaScreen
+import com.whitelext.dotaHunter.view.screens.ProfileScreen
+import com.whitelext.dotaHunter.view.screens.SearchScreen
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
@@ -76,6 +80,10 @@ fun Navigation(navController: NavHostController, modifier: Modifier) {
             ProfileScreen(profileId = profileId, navController = navController)
         }
 
+        composable(Screen.Meta.route) {
+            MetaScreen()
+        }
+
         composable(
             route = Screen.MatchDetail.route,
             arguments = listOf(navArgument(Constants.MATCH_ID) { type = NavType.LongType })
@@ -126,5 +134,6 @@ fun currentRoute(navController: NavHostController): String? {
 
 private val HomeNavigationItems = listOf(
     Screen.Search,
-    Screen.Favorites
+    Screen.Favorites,
+    Screen.Meta
 )
