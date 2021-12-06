@@ -6,6 +6,7 @@ import com.apollographql.apollo.cache.normalized.lru.EvictionPolicy
 import com.apollographql.apollo.cache.normalized.lru.LruNormalizedCacheFactory
 import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.apollographql.apollo.fetcher.ApolloResponseFetchers
+import com.whitelext.dotaHunter.domain.AppDatabase
 import com.whitelext.dotaHunter.domain.repository.*
 import dagger.Module
 import dagger.Provides
@@ -13,6 +14,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import javax.inject.Inject
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -35,6 +37,11 @@ object MainModule {
 
     @Provides
     fun provideMatchRepository(repositoryImpl: MatchRepositoryImpl): MatchRepository {
+        return repositoryImpl
+    }
+
+    @Provides
+    fun provideFavoritesRepository(repositoryImpl: FavoritesRepositoryImpl): FavoritesRepository {
         return repositoryImpl
     }
 
@@ -65,4 +72,10 @@ object MainModule {
             )
             .build()
     }
+
+    @Provides
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        return AppDatabase.getAppDataBase(context)
+    }
+
 }
