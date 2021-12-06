@@ -10,6 +10,7 @@ sealed class Screen(var route: String, var icon: Int, var title: String) {
     }
 
     object Meta : Screen("meta", R.drawable.ic_baseline_local_fire_department_24, "Meta")
+    object Timer : Screen("timer", R.drawable.ic_baseline_local_fire_department_24, "Meta")
 
     object MatchDetail : AppNavigation("match/{matchId}") {
         fun createRoute(matchId: Long) = "match/$matchId"

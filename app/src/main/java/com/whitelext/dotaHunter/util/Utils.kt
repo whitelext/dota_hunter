@@ -90,6 +90,12 @@ object Utils {
         }
     }
 
+    fun redCross() = "https://cdn-icons-png.flaticon.com/64/1828/1828665.png"
+
+    fun buybackIcon() = "https://static.wikia.nocookie.net/dota2_gamepedia/images/9/94/Greevil%27s_Greed_icon.png/revision/latest/scale-to-width-down/128?cb=20120801073414"
+
+    fun aegisIcon() = "https://static.wikia.nocookie.net/dota2_gamepedia/images/e/ed/Aegis_of_the_Immortal_ability_icon.png/revision/latest/scale-to-width-down/128?cb=20171203200214"
+
     fun convertUnixToDate(value: Long?): String {
         return if (value != null) {
             val date = Date(value * 1000)

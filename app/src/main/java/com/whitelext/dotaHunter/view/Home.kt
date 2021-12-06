@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -20,12 +21,10 @@ import androidx.navigation.navArgument
 import com.whitelext.dotaHunter.ui.theme.BottomNavColor
 import com.whitelext.dotaHunter.util.Constants
 import com.whitelext.dotaHunter.util.Screen
-import com.whitelext.dotaHunter.view.screens.MatchScreen
-import com.whitelext.dotaHunter.view.screens.MetaScreen
-import com.whitelext.dotaHunter.view.screens.ProfileScreen
-import com.whitelext.dotaHunter.view.screens.SearchScreen
+import com.whitelext.dotaHunter.view.screens.*
 import kotlinx.coroutines.FlowPreview
 
+@ExperimentalComposeUiApi
 @FlowPreview
 @Composable
 fun Home() {
@@ -61,6 +60,7 @@ fun Home() {
     }
 }
 
+@ExperimentalComposeUiApi
 @FlowPreview
 @Composable
 fun Navigation(navController: NavHostController, modifier: Modifier) {
@@ -82,6 +82,10 @@ fun Navigation(navController: NavHostController, modifier: Modifier) {
 
         composable(Screen.Meta.route) {
             MetaScreen()
+        }
+
+        composable(Screen.Timer.route) {
+            TimerScreen()
         }
 
         composable(
@@ -135,5 +139,6 @@ fun currentRoute(navController: NavHostController): String? {
 private val HomeNavigationItems = listOf(
     Screen.Search,
     Screen.Favorites,
-    Screen.Meta
+    Screen.Meta,
+    Screen.Timer
 )
