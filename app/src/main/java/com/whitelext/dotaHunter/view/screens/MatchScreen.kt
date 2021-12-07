@@ -25,7 +25,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.MatchStatsQuery
-import com.whitelext.dotaHunter.viewModels.MatchViewModel
 import com.whitelext.dotaHunter.domain.ItemStore
 import com.whitelext.dotaHunter.ui.theme.*
 import com.whitelext.dotaHunter.util.Constants
@@ -49,6 +48,7 @@ import com.whitelext.dotaHunter.view.CommonComponents.ItemsGrid
 import com.whitelext.dotaHunter.view.CommonComponents.TextLabelRounded
 import com.whitelext.dotaHunter.view.CommonComponents.TextLabelWithPictureRounded
 import com.whitelext.dotaHunter.view.CommonComponents.TextLabelWithTwoRows
+import com.whitelext.dotaHunter.viewModels.MatchViewModel
 import java.math.BigDecimal
 
 @Composable

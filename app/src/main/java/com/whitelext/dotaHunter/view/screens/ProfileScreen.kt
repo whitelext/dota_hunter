@@ -64,7 +64,6 @@ fun ProfileScreen(
             player.matches?.let { Matches(matches = player.matches.filterNotNull(), navController) }
         }
     }
-
 }
 
 @Composable
@@ -79,7 +78,6 @@ private fun UserCard(
     Row(
         modifier = Modifier
             .padding(7.dp)
-            .padding(top = 8.dp)
             .clip(shape = RoundedCornerShape(15.dp))
             .background(color = PlayerField)
             .fillMaxWidth()
@@ -120,7 +118,7 @@ private fun UserCard(
                     ) {
                         Icon(
                             // if (player in favorites) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder
-                            imageVector = Icons.Rounded.FavoriteBorder,
+                            imageVector = if (isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
                             contentDescription = stringResource(R.string.add_to_favorites_label),
                             tint = MaterialTheme.colors.onSurface,
                             modifier = Modifier.weight(1f)

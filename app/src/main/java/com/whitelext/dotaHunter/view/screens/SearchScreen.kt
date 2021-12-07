@@ -65,7 +65,6 @@ fun SearchScreen(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(7.dp)
-                .padding(top = 8.dp)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(15.dp))
                 .background(
@@ -164,6 +163,7 @@ private fun ShowResult(
     LazyColumn(
         modifier = Modifier
             .background(color = BackgroundDark)
+            .padding(bottom = 56.dp)
             .fillMaxHeight()
     ) {
         items(userList.size) { userIndex ->

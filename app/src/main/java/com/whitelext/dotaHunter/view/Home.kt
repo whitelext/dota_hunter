@@ -18,12 +18,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import coil.annotation.ExperimentalCoilApi
 import com.whitelext.dotaHunter.ui.theme.BottomNavColor
 import com.whitelext.dotaHunter.util.Constants
 import com.whitelext.dotaHunter.util.Screen
 import com.whitelext.dotaHunter.view.screens.*
 import kotlinx.coroutines.FlowPreview
 
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @FlowPreview
 @Composable
@@ -60,6 +62,7 @@ fun Home() {
     }
 }
 
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @FlowPreview
 @Composable
@@ -122,8 +125,8 @@ fun BottomNavigationBar(
                 },
                 label = { Text(text = screen.title) },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                selectedContentColor = Color.Black,
-                unselectedContentColor = Color.LightGray,
+                selectedContentColor = Color.White,
+                unselectedContentColor = Color.Black,
                 onClick = { onNavigationSelected(screen) },
             )
         }

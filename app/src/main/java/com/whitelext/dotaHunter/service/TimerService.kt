@@ -47,7 +47,7 @@ class TimerService : Service() {
             val notification = NotificationCompat.Builder(this, channelId)
                 .setContentTitle("DotaHunter")
                 .setContentText("Timers are running")
-                .setSmallIcon(R.drawable.ic_baseline_local_fire_department_24)
+                .setSmallIcon(R.drawable.ic_baseline_timer_24)
                 .setContentIntent(pendingIntent)
                 .build()
             startForeground(foreground_id, notification)

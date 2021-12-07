@@ -33,9 +33,9 @@ class SearchApi @Inject constructor(private val apolloClient: ApolloClient) {
             )
         }
 
-        val users = response?.data?.stratz?.search?.players?.filterNotNull()?.toMutableList()
+        val users = response.data?.stratz?.search?.players?.filterNotNull()?.toMutableList()
         val proUsers =
-            response?.data?.stratz?.search?.proPlayers?.mapNotNull { it?.toTypical() }
+            response.data?.stratz?.search?.proPlayers?.mapNotNull { it?.toTypical() }
 
         val concat = users?.let { if (proUsers != null) it.apply { addAll(proUsers) } else it }
 
@@ -43,7 +43,7 @@ class SearchApi @Inject constructor(private val apolloClient: ApolloClient) {
             Resource.Success(concat)
         } else {
             Resource.Error(
-                response?.errors?.let {
+                response.errors?.let {
                     ResourceError.API_ERROR.apply {
                         message = it.first().message
                     }

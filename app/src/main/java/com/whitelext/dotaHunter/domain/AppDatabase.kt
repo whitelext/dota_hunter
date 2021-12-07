@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.whitelext.dotaHunter.domain.dao.FavoritePlayersDAO
 import com.whitelext.dotaHunter.domain.model.FavoritePlayer
 
-@Database(entities = [FavoritePlayer::class], version = 1)
+@Database(entities = [FavoritePlayer::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun favoritePlayersDao(): FavoritePlayersDAO
 

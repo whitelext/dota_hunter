@@ -55,7 +55,6 @@ fun MetaScreen(
                 .fillMaxWidth()
                 .height(50.dp)
                 .padding(6.dp)
-                .padding(top = 8.dp)
                 .clip(shape = RoundedCornerShape(10.dp))
                 .background(color = BottomNavColor),
             verticalAlignment = Alignment.CenterVertically
@@ -145,7 +144,7 @@ fun MetaScreen(
             items(meta?.size ?: 0) { i ->
                 ShowHero(
                     info = meta?.get(i),
-                    viewModel = metaViewModel,
+                    viewModel = metaViewModel
                 )
             }
         }
