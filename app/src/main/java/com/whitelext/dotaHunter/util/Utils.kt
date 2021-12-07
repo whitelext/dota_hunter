@@ -1,9 +1,17 @@
 package com.whitelext.dotaHunter.util
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import com.example.MatchStatsQuery
 import com.example.UserProfileQuery
 import com.example.type.RankBracketHeroTimeDetail
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
@@ -156,4 +164,18 @@ object Utils {
         }
         return sum
     }
+
+    fun getBitmapFromURL(imageUrl: String): Bitmap? {
+        return try {
+            val url = URL(imageUrl)
+            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+            connection.doInput = true
+            connection.connect()
+            BitmapFactory.decodeStream(connection.inputStream)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
+    }
+
 }

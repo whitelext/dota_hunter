@@ -16,7 +16,6 @@ class SearchViewModel @Inject constructor(
     application: Application
 ) : AndroidViewModel(application) {
 
-    private var searchQuery = ""
     val userInput by lazy { MutableLiveData("") }
     private val _usersLiveData by lazy { MutableLiveData<List<UserListQuery.Player>>() }
     val usersLiveData: LiveData<List<UserListQuery.Player>> = _usersLiveData
@@ -25,10 +24,8 @@ class SearchViewModel @Inject constructor(
         userInput.value = ""
     }
 
-    fun onQueryChanged(newQuery: String) {
-        searchQuery = newQuery
-        if (searchQuery.isEmpty()) {
-            // TODO: put favourites users in usersLiveData
+    fun onQueryChanged() {
+        if (userInput.value.isNullOrEmpty()) {
             _usersLiveData.value = emptyList()
             return
         }
@@ -40,7 +37,7 @@ class SearchViewModel @Inject constructor(
 
     private suspend fun performSearchUsers() {
 
-        when (val response = searchRepository.searchUsers(searchQuery)) {
+        when (val response = searchRepository.searchUsers(userInput.value ?: "")) {
             is Resource.Success -> {
                 _usersLiveData.postValue(
                     response.data.filter { it.lastMatchDateTime != null }.sortedByDescending {

@@ -52,7 +52,7 @@ fun SearchScreen(
     navController: NavController
 ) {
     val userInput by viewModel.userInput.observeAsState()
-    val userList by viewModel.usersLiveData.observeAsState()
+    val userList by viewModel.usersLiveData.observeAsState(emptyList())
 
     Column(
         Modifier
@@ -82,7 +82,7 @@ fun SearchScreen(
                     value = userInput ?: "",
                     onValueChange = { newValue ->
                         viewModel.userInput.value = newValue
-//                        viewModel.onQueryChanged(userInput)
+                        viewModel.onQueryChanged()
                     },
                     modifier = Modifier
                         .padding(start = 15.dp)
@@ -101,7 +101,7 @@ fun SearchScreen(
                     ),
                     keyboardActions = KeyboardActions(
                         onSearch = {
-                            viewModel.onQueryChanged(userInput ?: "")
+                            viewModel.onQueryChanged()
                             keyboardController?.hide()
                         }
                     )
@@ -134,7 +134,7 @@ fun SearchScreen(
             ) {
                 IconButton(
                     onClick = {
-                        viewModel.onQueryChanged(userInput ?: "")
+                        viewModel.onQueryChanged()
                         keyboardController?.hide()
                     },
                     modifier = Modifier
@@ -151,7 +151,7 @@ fun SearchScreen(
                 }
             }
         }
-        ShowResult(userList ?: listOf(), navController)
+        ShowResult(userList, navController)
     }
 }
 

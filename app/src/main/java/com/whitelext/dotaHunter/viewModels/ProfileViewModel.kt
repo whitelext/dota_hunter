@@ -7,18 +7,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.UserProfileQuery
 import com.whitelext.dotaHunter.common.Resource
+import com.whitelext.dotaHunter.domain.model.FavoritePlayer
+import com.whitelext.dotaHunter.domain.repository.FavoritesRepository
 import com.whitelext.dotaHunter.domain.repository.ProfileRepository
-import com.whitelext.dotaHunter.util.Utils
+import com.whitelext.dotaHunter.util.Converter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
+    private val favoritesRepository: FavoritesRepository,
     application: Application
 ) : AndroidViewModel(application) {
 
     val profileData by lazy { MutableLiveData<UserProfileQuery.Player>() }
+    val isFavorite = MutableLiveData(false)
 
     private suspend fun performGetProfile(userId: Long) {
         when (val response = profileRepository.getProfile(userId)) {
@@ -34,11 +39,46 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    private suspend fun checkIsInFavorites() {
+        favoritesRepository.getPlayers { onCheckIsInFavoritesResult(it) }
+    }
+
+    private fun onCheckIsInFavoritesResult(result: Resource<List<FavoritePlayer>>) {
+        when (result) {
+            is Resource.Success -> {
+                val profileId = Converter.anyToLong(profileData.value?.steamAccount?.id)
+                isFavorite.value = result.data.any { it.id == profileId }
+            }
+            else -> isFavorite.value = false
+        }
+    }
+
+    private fun onChangeFavoritesResult(success: Boolean) {
+        if (success) {
+            viewModelScope.launch {
+                checkIsInFavorites()
+            }
+        }
+    }
+
     fun initUser(userId: Long) {
-        Utils.asyncCall(
-            coroutineScope = viewModelScope,
-            destinationFunction = ::performGetProfile,
-            argument = userId
-        ).invoke()
+        viewModelScope.launch {
+            performGetProfile(userId)
+            checkIsInFavorites()
+        }
+    }
+
+    fun changeFavorite() {
+        viewModelScope.launch {
+            if (isFavorite.value == false) {
+                profileData.value?.steamAccount?.let {
+                    favoritesRepository.addPlayer(Converter.steamAccountToPlayer(it)) { success -> onChangeFavoritesResult(success) }
+                }
+            } else {
+                Converter.anyToLong(profileData.value?.steamAccount?.id)?.let {
+                    favoritesRepository.deletePlayer(it) { success -> onChangeFavoritesResult(success) }
+                }
+            }
+        }
     }
 }

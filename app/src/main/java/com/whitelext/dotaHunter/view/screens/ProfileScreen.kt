@@ -9,6 +9,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,6 +30,7 @@ import com.example.UserProfileQuery
 import com.whitelext.dotaHunter.R
 import com.whitelext.dotaHunter.ui.theme.*
 import com.whitelext.dotaHunter.util.Constants.THIRTYTHIRD
+import com.whitelext.dotaHunter.util.Converter
 import com.whitelext.dotaHunter.util.Screen
 import com.whitelext.dotaHunter.util.Utils
 import com.whitelext.dotaHunter.view.CommonComponents.ItemsGrid
@@ -46,6 +48,7 @@ fun ProfileScreen(
 ) {
 
     val player by profileViewModel.profileData.observeAsState()
+
     profileViewModel.initUser(profileId)
 
     Column(
@@ -55,18 +58,24 @@ fun ProfileScreen(
             .fillMaxHeight()
     ) {
         player?.let { player ->
-            // TODO: implement onAddToFavoritesClickListener
-            UserCard(player = player, onAddToFavoritesClickListener = { false })
+            UserCard(player = player, profileViewModel, onFavoritesClickListener = {
+                profileViewModel.changeFavorite()
+            })
             player.matches?.let { Matches(matches = player.matches.filterNotNull(), navController) }
         }
     }
+
 }
 
 @Composable
 private fun UserCard(
     player: UserProfileQuery.Player,
-    onAddToFavoritesClickListener: (userId: Long) -> Boolean
+    viewModel: ProfileViewModel,
+    onFavoritesClickListener: () -> Unit
 ) {
+
+    val isFavorite by viewModel.isFavorite.observeAsState(false)
+
     Row(
         modifier = Modifier
             .padding(7.dp)
@@ -103,7 +112,7 @@ private fun UserCard(
                         fontSize = 22.sp
                     )
                     IconButton(
-                        onClick = { onAddToFavoritesClickListener((player.steamAccount?.id as BigDecimal).toLong()) },
+                        onClick = { onFavoritesClickListener() },
                         modifier = Modifier
                             .size(75.dp)
                             .weight(1f)
@@ -152,15 +161,14 @@ private fun UserCard(
                         modifier = Modifier.weight(1f)
                     )
                     IconButton(
-                        onClick = { onAddToFavoritesClickListener((player.steamAccount?.id as BigDecimal).toLong()) },
+                        onClick = { onFavoritesClickListener() },
                         modifier = Modifier
                             .padding(end = 10.dp)
                             .size(75.dp)
                             .weight(1f)
                     ) {
                         Icon(
-                            // if (player in favorites) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder
-                            imageVector = Icons.Rounded.FavoriteBorder,
+                            imageVector = if (isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
                             contentDescription = stringResource(R.string.add_to_favorites_label),
                             tint = MaterialTheme.colors.onSurface,
                             modifier = Modifier.weight(1f)
@@ -272,7 +280,7 @@ private fun ShowMatch(
             ) {
                 it.isVictory?.let { isVictory ->
                     TextLabelRounded(
-                        text = Utils.convertUnixToDate(
+                        text = Converter.unixToDate(
                             match.startDateTime.toString().toLongOrNull()
                         ),
                         textColor = if (isVictory) Win else Lose,
