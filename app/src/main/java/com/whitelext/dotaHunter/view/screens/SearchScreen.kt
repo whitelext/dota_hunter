@@ -163,7 +163,7 @@ private fun ShowResult(
     LazyColumn(
         modifier = Modifier
             .background(color = BackgroundDark)
-            .padding(bottom = 56.dp)
+//            .padding(bottom = 56.dp)
             .fillMaxHeight()
     ) {
         items(userList.size) { userIndex ->

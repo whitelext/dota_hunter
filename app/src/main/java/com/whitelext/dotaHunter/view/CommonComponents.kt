@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -283,4 +284,20 @@ object CommonComponents {
             )
         }
     }
+    @Composable
+    fun BackpackItemGrid(items: List<Short>, modifier: Modifier) {
+        Column {
+            Row {
+                for (i in 0..2) {
+                    val itemName = ItemStore.getItemById(items[i].toInt())
+                    if (items[i] < 0 || itemName == null) EmptySpace(EmptyItemSlot) else ItemIcon(
+                        itemUrl = Utils.getItemUrl(itemName),
+                        itemName = itemName,
+                        colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) })
+                    )
+                }
+            }
+        }
+    }
+
 }

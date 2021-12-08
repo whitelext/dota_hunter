@@ -14,8 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -25,7 +23,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.MatchStatsQuery
-import com.whitelext.dotaHunter.domain.ItemStore
 import com.whitelext.dotaHunter.ui.theme.*
 import com.whitelext.dotaHunter.util.Constants
 import com.whitelext.dotaHunter.util.Constants.GPM_XPM
@@ -42,8 +39,7 @@ import com.whitelext.dotaHunter.util.Utils.getGpmXpm
 import com.whitelext.dotaHunter.util.Utils.getKillsDeathsAssists
 import com.whitelext.dotaHunter.util.Utils.getRadiantKills
 import com.whitelext.dotaHunter.util.Utils.getResult
-import com.whitelext.dotaHunter.view.CommonComponents.EmptySpace
-import com.whitelext.dotaHunter.view.CommonComponents.ItemIcon
+import com.whitelext.dotaHunter.view.CommonComponents.BackpackItemGrid
 import com.whitelext.dotaHunter.view.CommonComponents.ItemsGrid
 import com.whitelext.dotaHunter.view.CommonComponents.TextLabelRounded
 import com.whitelext.dotaHunter.view.CommonComponents.TextLabelWithPictureRounded
@@ -335,22 +331,6 @@ private fun Players(
                         modifier = Modifier
                             .fillMaxWidth(fraction = 0.33f)
                             .weight(1f)
-                    )
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun BackpackItemGrid(items: List<Short>, modifier: Modifier) {
-        Column {
-            Row {
-                for (i in 0..2) {
-                    val itemName = ItemStore.getItemById(items[i].toInt())
-                    if (items[i] < 0 || itemName == null) EmptySpace(EmptyItemSlot) else ItemIcon(
-                        itemUrl = Utils.getItemUrl(itemName),
-                        itemName = itemName,
-                        colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) })
                     )
                 }
             }

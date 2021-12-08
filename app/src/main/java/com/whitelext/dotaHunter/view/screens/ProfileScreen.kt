@@ -1,4 +1,4 @@
-package com.whitelext.dotaHunter.view.screens
+package com.whitelext.dotaHunter.view
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -46,11 +46,8 @@ fun ProfileScreen(
     profileId: Long,
     navController: NavController
 ) {
-
     val player by profileViewModel.profileData.observeAsState()
-
     profileViewModel.initUser(profileId)
-
     Column(
         Modifier
             .background(BackgroundDark)
@@ -72,9 +69,7 @@ private fun UserCard(
     viewModel: ProfileViewModel,
     onFavoritesClickListener: () -> Unit
 ) {
-
     val isFavorite by viewModel.isFavorite.observeAsState(false)
-
     Row(
         modifier = Modifier
             .padding(7.dp)
@@ -114,7 +109,6 @@ private fun UserCard(
                         modifier = Modifier
                             .size(75.dp)
                             .weight(1f)
-
                     ) {
                         Icon(
                             // if (player in favorites) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder

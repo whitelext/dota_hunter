@@ -14,7 +14,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
-import javax.inject.Inject
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -82,5 +81,4 @@ object MainModule {
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return AppDatabase.getAppDataBase(context)
     }
-
 }

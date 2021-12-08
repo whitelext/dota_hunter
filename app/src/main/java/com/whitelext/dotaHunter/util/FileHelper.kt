@@ -11,7 +11,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.*
 
-
 object FileHelper {
 
     enum class Folder(val folderName: String) {
@@ -24,7 +23,13 @@ object FileHelper {
         RANK("rank", "png"),
     }
 
-    fun saveEntity(id: String, url: String, entity: Entity, folder: Folder, context: Context): String? {
+    fun saveEntity(
+        id: String,
+        url: String,
+        entity: Entity,
+        folder: Folder,
+        context: Context
+    ): String? {
         val resultDir = File(context.filesDir, folder.folderName)
         if (!resultDir.exists()) {
             resultDir.mkdir()
@@ -87,5 +92,4 @@ object FileHelper {
     private fun getFileNameByEntity(id: String, entity: Entity): String {
         return "${entity.entityName}_$id.${entity.extension}"
     }
-
 }
