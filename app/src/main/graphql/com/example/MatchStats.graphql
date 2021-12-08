@@ -10,10 +10,6 @@ query MatchStats($match_id: Long! = 3948266497){
             }
             hero{
                 shortName
-#                talents{
-#                    abilityId
-#                    slot
-#                }
             }
             level
             isVictory

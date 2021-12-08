@@ -35,7 +35,6 @@ fun TimerScreen(
         modifier = Modifier
             .background(color = BackgroundDark)
             .fillMaxSize()
-            .padding(top = 6.dp)
     ) {
         Row(
             modifier = Modifier
@@ -56,7 +55,6 @@ fun TimerScreen(
                 fontSize = 24.sp
             )
         }
-
         aegisTimer?.let {
             ShowTimer(
                 remainingTime = it,

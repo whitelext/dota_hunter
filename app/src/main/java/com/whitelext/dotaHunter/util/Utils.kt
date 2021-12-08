@@ -5,10 +5,7 @@ import android.graphics.BitmapFactory
 import com.example.MatchStatsQuery
 import com.example.UserProfileQuery
 import com.example.type.RankBracketHeroTimeDetail
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
@@ -100,9 +97,11 @@ object Utils {
 
     fun redCross() = "https://cdn-icons-png.flaticon.com/64/1828/1828665.png"
 
-    fun buybackIcon() = "https://static.wikia.nocookie.net/dota2_gamepedia/images/9/94/Greevil%27s_Greed_icon.png/revision/latest/scale-to-width-down/128?cb=20120801073414"
+    fun buybackIcon() =
+        "https://static.wikia.nocookie.net/dota2_gamepedia/images/9/94/Greevil%27s_Greed_icon.png/revision/latest/scale-to-width-down/128?cb=20120801073414"
 
-    fun aegisIcon() = "https://static.wikia.nocookie.net/dota2_gamepedia/images/e/ed/Aegis_of_the_Immortal_ability_icon.png/revision/latest/scale-to-width-down/128?cb=20171203200214"
+    fun aegisIcon() =
+        "https://static.wikia.nocookie.net/dota2_gamepedia/images/e/ed/Aegis_of_the_Immortal_ability_icon.png/revision/latest/scale-to-width-down/128?cb=20171203200214"
 
     fun convertUnixToDate(value: Long?): String {
         return if (value != null) {
@@ -183,5 +182,4 @@ object Utils {
             null
         }
     }
-
 }
