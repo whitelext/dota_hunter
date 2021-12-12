@@ -22,4 +22,13 @@
     <style name="Theme.Dota_hunter.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Dota_hunter.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        // Set the splash screen background, animated icon, and animation duration.
+        <item name="windowSplashScreenBackground">@color/statusBar</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_group_347small_logo</item>
+
+        // Set the theme of the Activity that directly follows your splash screen.
+        <item name="postSplashScreenTheme">@style/Theme.Dota_hunter</item>  # Required.
+    </style>
 </resources>
