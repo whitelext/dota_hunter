@@ -29,13 +29,13 @@ class MetaViewModel @Inject constructor(
 
     companion object {
 
-        val CHANGE_FROM_PICK = 0L
-        val CHANGE_FROM_WIN = 1L
+        const val CHANGE_FROM_PICK = 0L
+        const val CHANGE_FROM_WIN = 1L
 
-        private val PICK_RATE_BY_DESCENDING = 0L
-        private val PICK_RATE_BY_ASCENDING = 1L
-        private val WIN_RATE_BY_DESCENDING = 2L
-        private val WIN_RATE_BY_ASCENDING = 3L
+        private const val PICK_RATE_BY_DESCENDING = 0L
+        private const val PICK_RATE_BY_ASCENDING = 1L
+        private const val WIN_RATE_BY_DESCENDING = 2L
+        private const val WIN_RATE_BY_ASCENDING = 3L
 
         private val pickRateDescendingComparator =
             compareByDescending<HeroInfo> { it.picks }
