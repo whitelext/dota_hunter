@@ -12,6 +12,7 @@ import com.whitelext.dotaHunter.domain.repository.FavoritesRepository
 import com.whitelext.dotaHunter.domain.repository.ProfileRepository
 import com.whitelext.dotaHunter.util.Converter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,6 +25,7 @@ class ProfileViewModel @Inject constructor(
 
     val profileData by lazy { MutableLiveData<UserProfileQuery.Player>() }
     val isFavorite = MutableLiveData(false)
+    var loading = false
 
     private suspend fun performGetProfile(userId: Long) {
         when (val response = profileRepository.getProfile(userId)) {
@@ -63,6 +65,8 @@ class ProfileViewModel @Inject constructor(
 
     fun initUser(userId: Long) {
         viewModelScope.launch {
+            delay(400L)
+            loading = true
             performGetProfile(userId)
             checkIsInFavorites()
         }

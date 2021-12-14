@@ -1,5 +1,7 @@
 package com.whitelext.dotaHunter.view
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -8,7 +10,10 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -20,11 +25,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import coil.annotation.ExperimentalCoilApi
 import com.whitelext.dotaHunter.ui.theme.BottomNavColor
+import com.whitelext.dotaHunter.ui.theme.poppinsFamily
 import com.whitelext.dotaHunter.util.Constants
 import com.whitelext.dotaHunter.util.Screen
 import com.whitelext.dotaHunter.view.screens.*
 import kotlinx.coroutines.FlowPreview
 
+@RequiresApi(Build.VERSION_CODES.N)
 @ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @FlowPreview
@@ -62,6 +69,7 @@ fun Home() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.N)
 @ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @FlowPreview
@@ -123,7 +131,15 @@ fun BottomNavigationBar(
                         contentDescription = screen.title
                     )
                 },
-                label = { Text(text = screen.title) },
+                label = {
+                    Text(
+                        text = screen.title,
+                        fontFamily = poppinsFamily,
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center,
+                        fontSize = 12.sp
+                    )
+                },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 selectedContentColor = Color.White,
                 unselectedContentColor = Color.Black,

@@ -27,6 +27,12 @@ class TimerViewModel @Inject constructor(
             val timerType = intent.getSerializableExtra("Type") as TimerType
 
             if (remainingTime != null && timerId != null) {
+                if (remainingTime != "finished") {
+                    isPressed.value?.set(timerId, true)
+                    isPressed.notify()
+                } else {
+                    stopTimer(timerId)
+                }
                 when (timerType) {
                     TimerType.AEGIS -> {
                         aegisTimer.value = remainingTime
@@ -44,8 +50,14 @@ class TimerViewModel @Inject constructor(
             }
         }
     }
+
+    fun <T> MutableLiveData<T>.notify() {
+        this.value = this.value
+    }
+
     val timerCountdown = MutableLiveData<MutableMap<Int, String>>(mutableMapOf())
     val aegisTimer = MutableLiveData<String>()
+    var isPressed = MutableLiveData<MutableMap<Int, Boolean>>(mutableMapOf())
 
     init {
         LocalBroadcastManager.getInstance(getApplication()).registerReceiver(
@@ -58,6 +70,7 @@ class TimerViewModel @Inject constructor(
     }
 
     fun stopTimer(id: Int) {
+        isPressed.value?.set(id, false)
         if (amountOfActive() <= 1) {
             stopTimers()
         } else {
@@ -72,7 +85,7 @@ class TimerViewModel @Inject constructor(
         }
     }
 
-    fun stopTimers() {
+    private fun stopTimers() {
         getApplication<Application>().applicationContext.stopService()
         timerCountdown.value = mutableMapOf()
         aegisTimer.value = null
@@ -86,6 +99,7 @@ class TimerViewModel @Inject constructor(
 
     override fun onCleared() {
         LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(mMessageReceiver)
+        stopTimers()
         super.onCleared()
     }
 }

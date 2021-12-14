@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,13 +23,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.whitelext.dotaHunter.domain.ItemStore
-import com.whitelext.dotaHunter.ui.theme.BackgroundDark
-import com.whitelext.dotaHunter.ui.theme.EmptyItemSlot
-import com.whitelext.dotaHunter.ui.theme.Transparent
-import com.whitelext.dotaHunter.ui.theme.poppinsFamily
+import com.whitelext.dotaHunter.ui.theme.*
 import com.whitelext.dotaHunter.util.Utils
 
 object CommonComponents {
+
+    @Composable
+    fun CircularIndeterminateProgressBar(isDisplayed: Boolean) {
+        if (isDisplayed) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                CircularProgressIndicator(
+                    color = PlayerField
+                )
+            }
+        }
+    }
 
     @Composable
     fun ProfilePhoto(id: String?) {

@@ -40,6 +40,7 @@ import com.whitelext.dotaHunter.util.Utils.getKillsDeathsAssists
 import com.whitelext.dotaHunter.util.Utils.getRadiantKills
 import com.whitelext.dotaHunter.util.Utils.getResult
 import com.whitelext.dotaHunter.view.CommonComponents.BackpackItemGrid
+import com.whitelext.dotaHunter.view.CommonComponents.CircularIndeterminateProgressBar
 import com.whitelext.dotaHunter.view.CommonComponents.ItemsGrid
 import com.whitelext.dotaHunter.view.CommonComponents.TextLabelRounded
 import com.whitelext.dotaHunter.view.CommonComponents.TextLabelWithPictureRounded
@@ -54,14 +55,17 @@ fun MatchScreen(
     navController: NavController
 ) {
     val match by matchViewModel.matchData.observeAsState()
-    matchViewModel.initMatch(matchId)
-//
+    val loading = matchViewModel.loading
     Column(
         Modifier
             .background(BackgroundDark)
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
+        if (!loading) {
+            CircularIndeterminateProgressBar(!loading)
+        }
+        matchViewModel.initMatch(matchId)
         match?.let { match ->
             MatchCard(match)
             match.players?.let {
