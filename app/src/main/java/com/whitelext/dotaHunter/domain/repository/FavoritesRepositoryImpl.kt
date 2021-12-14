@@ -1,7 +1,6 @@
 package com.whitelext.dotaHunter.domain.repository
 
 import android.content.Context
-import android.util.Log
 import com.example.UserListQuery
 import com.whitelext.dotaHunter.common.Resource
 import com.whitelext.dotaHunter.domain.AppDatabase
@@ -58,5 +57,4 @@ class FavoritesRepositoryImpl @Inject constructor(
             callback.invoke(false)
         }
     }
-
 }

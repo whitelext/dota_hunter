@@ -20,12 +20,22 @@ class FavoritePlayer(
 ) {
 
     fun getAvatarBitmap(context: Context): ImageBitmap? {
-        val bitmap = FileHelper.getImageEntity(id.toString(), FileHelper.Entity.AVATAR, FileHelper.Folder.FAVORITES, context)
+        val bitmap = FileHelper.getImageEntity(
+            id.toString(),
+            FileHelper.Entity.AVATAR,
+            FileHelper.Folder.FAVORITES,
+            context
+        )
         return bitmap?.asImageBitmap()
     }
 
     fun getRankBitmap(context: Context): ImageBitmap? {
-        val bitmap = FileHelper.getImageEntity(rank.toString(), FileHelper.Entity.RANK, FileHelper.Folder.RANKS, context)
+        val bitmap = FileHelper.getImageEntity(
+            rank.toString(),
+            FileHelper.Entity.RANK,
+            FileHelper.Folder.RANKS,
+            context
+        )
         return bitmap?.asImageBitmap()
     }
 
@@ -40,8 +50,5 @@ class FavoritePlayer(
                 profile.lastMatchDateTime.toString().toLongOrNull()
             )
         }
-
     }
-
 }
-

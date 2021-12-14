@@ -73,7 +73,6 @@ fun MetaScreen(
                     .fillMaxWidth(Constants.HALF)
                     .clickable {
                         metaViewModel.changeState(metaViewModel.CHANGE_FROM_PICK)
-                        // scope.launch { scrollState.scrollTo(scrollState.value - (meta?.size ?: 0)) }
                     },
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,
@@ -86,7 +85,6 @@ fun MetaScreen(
                     .fillMaxWidth()
                     .clickable {
                         metaViewModel.changeState(metaViewModel.CHANGE_FROM_WIN)
-                        // scope.launch { scrollState.scrollTo(scrollState.value - (meta?.size ?: 0)) }
                     },
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,
@@ -118,7 +116,9 @@ fun MetaScreen(
                 },
                 valueRange = 1f..4f,
                 steps = 2,
-                modifier = Modifier.padding(horizontal = 10.dp).weight(0.85f)
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .weight(0.85f)
             )
 
             fun Float.toMMR(): String {
@@ -169,7 +169,6 @@ private fun ShowHero(
                 .background(color = MatchField),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Text(heroMap[info.id.toString()]?.second ?: "Unknown hero")
             Box(
                 contentAlignment = Alignment.Center
             ) {

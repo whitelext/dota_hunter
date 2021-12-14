@@ -23,8 +23,11 @@ object LocalCache {
     }
 
     fun removeFavoritePlayer(playerId: Long, context: Context) {
-        // TODO: в идеале через службу, но пока и так сойдёт
-        FileHelper.deleteEntity(playerId.toString(), FileHelper.Entity.AVATAR, FileHelper.Folder.FAVORITES, context)
+        FileHelper.deleteEntity(
+            playerId.toString(),
+            FileHelper.Entity.AVATAR,
+            FileHelper.Folder.FAVORITES,
+            context
+        )
     }
-
 }

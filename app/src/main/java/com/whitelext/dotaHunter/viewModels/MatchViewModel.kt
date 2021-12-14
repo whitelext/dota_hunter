@@ -30,9 +30,6 @@ class MatchViewModel @Inject constructor(
             is Resource.Error -> {
                 Toast.makeText(getApplication(), response.error.message, Toast.LENGTH_SHORT).show()
             }
-            else -> {
-                // TODO: same ui notification
-            }
         }
     }
 

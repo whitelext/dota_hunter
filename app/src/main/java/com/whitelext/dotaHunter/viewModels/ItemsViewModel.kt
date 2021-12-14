@@ -2,7 +2,10 @@ package com.whitelext.dotaHunter.viewModels
 
 import android.app.Application
 import android.widget.Toast
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.ItemsListQuery
 import com.whitelext.dotaHunter.common.Resource
 import com.whitelext.dotaHunter.domain.repository.ItemsRepository
@@ -41,9 +44,6 @@ class ItemsViewModel @Inject constructor(
             }
             is Resource.Error -> {
                 Toast.makeText(getApplication(), response.error.message, Toast.LENGTH_SHORT).show()
-            }
-            else -> {
-                // TODO: same ui notification
             }
         }
     }

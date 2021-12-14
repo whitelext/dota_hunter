@@ -9,7 +9,10 @@ import com.whitelext.dotaHunter.util.Utils.getBitmapFromURL
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.*
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
 
 object FileHelper {
 

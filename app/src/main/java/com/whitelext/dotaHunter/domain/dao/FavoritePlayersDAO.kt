@@ -1,6 +1,9 @@
 package com.whitelext.dotaHunter.domain.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.whitelext.dotaHunter.domain.model.FavoritePlayer
 
 @Dao
@@ -13,5 +16,4 @@ interface FavoritePlayersDAO {
 
     @Query("SELECT * FROM favorite_players")
     fun getPlayers(): List<FavoritePlayer>
-
 }

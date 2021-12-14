@@ -4,7 +4,10 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
@@ -118,7 +121,6 @@ private fun UserCard(
                             .weight(1f)
                     ) {
                         Icon(
-                            // if (player in favorites) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder
                             imageVector = if (isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
                             contentDescription = stringResource(R.string.add_to_favorites_label),
                             tint = MaterialTheme.colors.onSurface,
@@ -268,7 +270,6 @@ private fun ShowMatch(
                         it.item4Id,
                         it.item5Id
                     )
-                        // .map { itemId -> if (itemId == null) -1 else (itemId as BigDecimal).toShort() })
                         .map { itemId -> (itemId as BigDecimal?)?.toShort() ?: -1 }
                 )
             }

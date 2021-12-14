@@ -11,5 +11,4 @@ interface FavoritesRepository {
     suspend fun addPlayer(player: UserListQuery.Player, callback: (Boolean) -> Unit)
 
     suspend fun deletePlayer(playerId: Long, callback: (Boolean) -> Unit)
-
 }

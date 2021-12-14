@@ -92,8 +92,8 @@ class TimerViewModel @Inject constructor(
     }
 
     private fun amountOfActive(): Int {
-        var x = if (aegisTimer.value == null) 0 else 1
-        x += timerCountdown.value?.values?.filterNotNull()?.size ?: 0
+        var x = if (aegisTimer.value == null || aegisTimer.value == "finished") 0 else 1
+        x += isPressed.value?.count { it.value } ?: 0
         return x
     }
 

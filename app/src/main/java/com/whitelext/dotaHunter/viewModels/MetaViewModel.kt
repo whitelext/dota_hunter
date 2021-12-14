@@ -27,31 +27,30 @@ class MetaViewModel @Inject constructor(
         getMeta()
     }
 
-    // Sorting states
-    private val PICK_RATE_BY_DESCENDING = 0L
-    private val PICK_RATE_BY_ASCENDING = 1L
-    private val WIN_RATE_BY_DESCENDING = 2L
-    private val WIN_RATE_BY_ASCENDING = 3L
+    companion object {
 
-    // Changing flags
-    val CHANGE_FROM_PICK = 0L
-    val CHANGE_FROM_WIN = 1L
+        val CHANGE_FROM_PICK = 0L
+        val CHANGE_FROM_WIN = 1L
 
-    // Comparators
-    private val pickRateDescendingComparator =
-        compareByDescending<HeroInfo> { it.picks }
-    private val pickRateAscendingComparator =
-        compareBy<HeroInfo> { it.picks }
-    private val winRateDescendingComparator =
-        compareByDescending<HeroInfo> { it.wins }
-    private val winRateAscendingComparator =
-        compareBy<HeroInfo> { it.wins }
+        private val PICK_RATE_BY_DESCENDING = 0L
+        private val PICK_RATE_BY_ASCENDING = 1L
+        private val WIN_RATE_BY_DESCENDING = 2L
+        private val WIN_RATE_BY_ASCENDING = 3L
+
+        private val pickRateDescendingComparator =
+            compareByDescending<HeroInfo> { it.picks }
+        private val pickRateAscendingComparator =
+            compareBy<HeroInfo> { it.picks }
+        private val winRateDescendingComparator =
+            compareByDescending<HeroInfo> { it.wins }
+        private val winRateAscendingComparator =
+            compareBy<HeroInfo> { it.wins }
+    }
 
     var sortingState = PICK_RATE_BY_DESCENDING
 
     private var bracketId = 1
 
-    // id -> (shortName, displayName)
     private val _heroMap = ConcurrentHashMap<String, HeroNames>()
     val heroMap
         get() = _heroMap.toMap()
@@ -83,8 +82,10 @@ class MetaViewModel @Inject constructor(
         sortingState = when (sortingState to changeFlag) {
             (PICK_RATE_BY_DESCENDING to CHANGE_FROM_PICK) -> PICK_RATE_BY_ASCENDING
             (PICK_RATE_BY_ASCENDING to CHANGE_FROM_PICK) -> PICK_RATE_BY_DESCENDING
-            (WIN_RATE_BY_DESCENDING to CHANGE_FROM_PICK), (WIN_RATE_BY_ASCENDING to CHANGE_FROM_PICK) -> PICK_RATE_BY_DESCENDING
-            (PICK_RATE_BY_DESCENDING to CHANGE_FROM_WIN), (PICK_RATE_BY_ASCENDING to CHANGE_FROM_WIN) -> WIN_RATE_BY_DESCENDING
+            (WIN_RATE_BY_DESCENDING to CHANGE_FROM_PICK),
+            (WIN_RATE_BY_ASCENDING to CHANGE_FROM_PICK) -> PICK_RATE_BY_DESCENDING
+            (PICK_RATE_BY_DESCENDING to CHANGE_FROM_WIN),
+            (PICK_RATE_BY_ASCENDING to CHANGE_FROM_WIN) -> WIN_RATE_BY_DESCENDING
             (WIN_RATE_BY_ASCENDING to CHANGE_FROM_WIN) -> WIN_RATE_BY_DESCENDING
             (WIN_RATE_BY_DESCENDING to CHANGE_FROM_WIN) -> WIN_RATE_BY_ASCENDING
             else -> PICK_RATE_BY_DESCENDING
@@ -107,7 +108,6 @@ class MetaViewModel @Inject constructor(
         }
     }
 
-    // 28.93-29.49-28.64-24.01
     private suspend fun performGetMeta() {
         when (val response = metaRepository.getMeta(bracketId)) {
             is Resource.Success -> {
@@ -151,9 +151,6 @@ class MetaViewModel @Inject constructor(
             }
             is Resource.Error -> {
                 Toast.makeText(getApplication(), response.error.message, Toast.LENGTH_SHORT).show()
-            }
-            else -> {
-                // TODO: same ui notification
             }
         }
     }

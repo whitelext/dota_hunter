@@ -1,7 +1,6 @@
 package com.whitelext.dotaHunter
 
 import android.app.Application
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -38,9 +37,6 @@ class FavoritesViewModel @Inject constructor(
             }
             is Resource.Error -> {
                 Toast.makeText(getApplication(), result.error.message, Toast.LENGTH_SHORT).show()
-            }
-            else -> {
-                Toast.makeText(getApplication(), "Something went wrong", Toast.LENGTH_SHORT).show()
             }
         }
     }

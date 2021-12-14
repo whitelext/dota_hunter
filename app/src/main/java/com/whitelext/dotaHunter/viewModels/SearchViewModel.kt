@@ -2,7 +2,10 @@ package com.whitelext.dotaHunter.viewModels
 
 import android.app.Application
 import android.widget.Toast
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.UserListQuery
 import com.whitelext.dotaHunter.common.Resource
 import com.whitelext.dotaHunter.domain.repository.SearchRepository
@@ -47,10 +50,6 @@ class SearchViewModel @Inject constructor(
             }
             is Resource.Error -> {
                 Toast.makeText(getApplication(), response.error.message, Toast.LENGTH_SHORT).show()
-            }
-            else -> {
-                // TODO: same ui notification
-                Toast.makeText(getApplication(), "Something went wrong", Toast.LENGTH_SHORT).show()
             }
         }
     }

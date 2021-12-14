@@ -31,5 +31,4 @@ object Converter {
     fun anyToLong(id: Any?): Long? {
         return id?.let { (it as BigDecimal).toLong() }
     }
-
 }

@@ -299,8 +299,9 @@ object CommonComponents {
             )
         }
     }
+
     @Composable
-    fun BackpackItemGrid(items: List<Short>, modifier: Modifier) {
+    fun BackpackItemGrid(items: List<Short>) {
         Column {
             Row {
                 for (i in 0..2) {
@@ -308,11 +309,16 @@ object CommonComponents {
                     if (items[i] < 0 || itemName == null) EmptySpace(EmptyItemSlot) else ItemIcon(
                         itemUrl = Utils.getItemUrl(itemName),
                         itemName = itemName,
-                        colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) })
+                        colorFilter = ColorFilter.colorMatrix(
+                            ColorMatrix().apply {
+                                setToSaturation(
+                                    0f
+                                )
+                            }
+                        )
                     )
                 }
             }
         }
     }
-
 }

@@ -35,9 +35,6 @@ class ProfileViewModel @Inject constructor(
             is Resource.Error -> {
                 Toast.makeText(getApplication(), response.error.message, Toast.LENGTH_SHORT).show()
             }
-            else -> {
-                // TODO: same ui notification
-            }
         }
     }
 
@@ -76,11 +73,19 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             if (isFavorite.value == false) {
                 profileData.value?.steamAccount?.let {
-                    favoritesRepository.addPlayer(Converter.steamAccountToPlayer(it)) { success -> onChangeFavoritesResult(success) }
+                    favoritesRepository.addPlayer(Converter.steamAccountToPlayer(it)) { success ->
+                        onChangeFavoritesResult(
+                            success
+                        )
+                    }
                 }
             } else {
                 Converter.anyToLong(profileData.value?.steamAccount?.id)?.let {
-                    favoritesRepository.deletePlayer(it) { success -> onChangeFavoritesResult(success) }
+                    favoritesRepository.deletePlayer(it) { success ->
+                        onChangeFavoritesResult(
+                            success
+                        )
+                    }
                 }
             }
         }

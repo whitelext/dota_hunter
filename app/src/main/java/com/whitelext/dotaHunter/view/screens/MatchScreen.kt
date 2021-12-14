@@ -210,7 +210,6 @@ private fun Players(
                         player.item4Id,
                         player.item5Id
                     )
-                        // .map { itemId -> if (itemId == null) -1 else (itemId as BigDecimal).toShort() })
                         .map { itemId -> (itemId as BigDecimal?)?.toShort() ?: -1 },
                 )
             }
@@ -241,9 +240,7 @@ private fun Players(
                         player.backpack1Id,
                         player.backpack2Id,
                     )
-                        // .map { itemId -> if (itemId == null) -1 else (itemId as BigDecimal).toShort() })
-                        .map { itemId -> (itemId as BigDecimal?)?.toShort() ?: -1 },
-                    modifier = Modifier.fillMaxWidth(fraction = Constants.HALF)
+                        .map { itemId -> (itemId as BigDecimal?)?.toShort() ?: -1 }
                 )
             }
             Row(
