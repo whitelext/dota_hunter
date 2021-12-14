@@ -71,7 +71,7 @@ class TimerViewModel @Inject constructor(
 
     fun stopTimer(id: Int) {
         isPressed.value?.set(id, false)
-        if (amountOfActive() <= 1) {
+        if (amountOfActive() < 1) {
             stopTimers()
         } else {
             getApplication<Application>().applicationContext.foregroundStartService(

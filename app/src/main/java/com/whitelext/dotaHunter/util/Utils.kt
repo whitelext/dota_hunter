@@ -26,7 +26,11 @@ object Utils {
     ): () -> Unit {
         return {
             debounceJob?.cancel()
-            debounceJob = coroutineScope.launch(Dispatchers.IO) {
+            debounceJob = coroutineScope.launch(
+                Dispatchers.IO + CoroutineExceptionHandler {
+                    _, _ ->
+                }
+            ) {
                 delay(waitMs)
                 destinationFunction()
             }
@@ -41,7 +45,11 @@ object Utils {
     ): () -> Unit {
         return {
             debounceJob?.cancel()
-            debounceJob = coroutineScope.launch(Dispatchers.IO) {
+            debounceJob = coroutineScope.launch(
+                Dispatchers.IO + CoroutineExceptionHandler {
+                    _, _ ->
+                }
+            ) {
                 delay(waitMs)
                 destinationFunction(argument)
             }
