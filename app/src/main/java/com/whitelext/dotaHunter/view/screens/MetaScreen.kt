@@ -72,7 +72,7 @@ fun MetaScreen(
                 modifier = Modifier
                     .fillMaxWidth(Constants.HALF)
                     .clickable {
-                        metaViewModel.changeState(metaViewModel.CHANGE_FROM_PICK)
+                        metaViewModel.changeState(MetaViewModel.CHANGE_FROM_PICK)
                     },
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,
@@ -84,7 +84,7 @@ fun MetaScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        metaViewModel.changeState(metaViewModel.CHANGE_FROM_WIN)
+                        metaViewModel.changeState(MetaViewModel.CHANGE_FROM_WIN)
                     },
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,
