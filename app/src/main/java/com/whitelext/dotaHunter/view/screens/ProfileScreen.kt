@@ -1,13 +1,10 @@
-package com.whitelext.dotaHunter.view
+package com.whitelext.dotaHunter.view.screens
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
@@ -33,6 +30,7 @@ import com.whitelext.dotaHunter.util.Constants.THIRTYTHIRD
 import com.whitelext.dotaHunter.util.Converter
 import com.whitelext.dotaHunter.util.Screen
 import com.whitelext.dotaHunter.util.Utils
+import com.whitelext.dotaHunter.view.CommonComponents.CircularIndeterminateProgressBar
 import com.whitelext.dotaHunter.view.CommonComponents.ItemsGrid
 import com.whitelext.dotaHunter.view.CommonComponents.ProfilePhoto
 import com.whitelext.dotaHunter.view.CommonComponents.Rank
@@ -47,18 +45,27 @@ fun ProfileScreen(
     navController: NavController
 ) {
     val player by profileViewModel.profileData.observeAsState()
-    profileViewModel.initUser(profileId)
+    val loading = profileViewModel.loading
     Column(
         Modifier
             .background(BackgroundDark)
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
+        if (!loading) {
+            CircularIndeterminateProgressBar(!loading)
+        }
+        profileViewModel.initUser(profileId)
         player?.let { player ->
             UserCard(player = player, profileViewModel, onFavoritesClickListener = {
                 profileViewModel.changeFavorite()
             })
-            player.matches?.let { Matches(matches = player.matches.filterNotNull(), navController) }
+            player.matches?.let {
+                Matches(
+                    matches = player.matches.filterNotNull(),
+                    navController
+                )
+            }
         }
     }
 }

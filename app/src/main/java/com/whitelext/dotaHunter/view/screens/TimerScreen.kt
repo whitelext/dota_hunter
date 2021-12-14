@@ -1,5 +1,7 @@
 package com.whitelext.dotaHunter.view.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,6 +25,7 @@ import com.whitelext.dotaHunter.common.TimerType
 import com.whitelext.dotaHunter.ui.theme.*
 import com.whitelext.dotaHunter.viewModels.TimerViewModel
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun TimerScreen(
     timerViewModel: TimerViewModel = hiltViewModel()
@@ -30,6 +33,7 @@ fun TimerScreen(
 
     val aegisTimer by timerViewModel.aegisTimer.observeAsState()
     val timers by timerViewModel.timerCountdown.observeAsState()
+    val isPressed by timerViewModel.isPressed.observeAsState()
 
     Column(
         modifier = Modifier
@@ -88,6 +92,7 @@ fun TimerScreen(
             for (i in 0..4) {
                 ShowBuyback(
                     remainingTime = timers?.get(i + 1) ?: "finished",
+                    isPressed = isPressed?.get(i + 1) ?: false,
                     timerViewModel,
                     i + 1
                 )
@@ -99,6 +104,7 @@ fun TimerScreen(
 @Composable
 fun ShowBuyback(
     remainingTime: String,
+    isPressed: Boolean,
     timerViewModel: TimerViewModel,
     id: Int
 ) {
@@ -108,13 +114,10 @@ fun ShowBuyback(
             .height(55.dp)
     ) {
 
-        var isPressed by remember { mutableStateOf(false) }
-
         if (isPressed) {
             IconButton(
                 onClick = {
                     timerViewModel.stopTimer(id)
-                    isPressed = false
                 },
                 modifier = Modifier
                     .width(60.dp)
@@ -134,7 +137,6 @@ fun ShowBuyback(
             IconButton(
                 onClick = {
                     timerViewModel.startTimer(TimerType.BUYBACK, id)
-                    isPressed = true
                 },
                 modifier = Modifier
                     .width(60.dp)

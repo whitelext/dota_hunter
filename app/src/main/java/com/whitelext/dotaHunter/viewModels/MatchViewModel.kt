@@ -19,10 +19,12 @@ class MatchViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
 
     val matchData by lazy { MutableLiveData<MatchStatsQuery.Match>() }
+    var loading = false
 
     private suspend fun performGetMatch(matchId: Long) {
         when (val response = matchRepository.getMatch(matchId)) {
             is Resource.Success -> {
+                loading = true
                 matchData.postValue(response.data)
             }
             is Resource.Error -> {
@@ -36,6 +38,7 @@ class MatchViewModel @Inject constructor(
 
     fun initMatch(matchId: Long) {
         Utils.asyncCall(
+            waitMs = 400L,
             coroutineScope = viewModelScope,
             destinationFunction = ::performGetMatch,
             argument = matchId
